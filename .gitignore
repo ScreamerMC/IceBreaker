@@ -7,7 +7,6 @@ node_modules/
 .expo/
 dist/
 web-build/
-
 # Native
 *.orig.*
 *.jks
@@ -18,7 +17,7 @@ web-build/
 
 # Metro
 .metro-health-check*
-
+firebaseConfig.js
 # debug
 npm-debug.*
 yarn-debug.*
