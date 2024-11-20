@@ -7,6 +7,7 @@ import { doc, getDoc } from 'firebase/firestore';
 
 export default function MyProfileScreen({ navigation }) {
   const [mainImage, setMainImage] = useState(null);
+  const [name, setName] = useState('');
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -16,6 +17,7 @@ export default function MyProfileScreen({ navigation }) {
       if (userDoc.exists()) {
         const data = userDoc.data();
         setMainImage(data.mainImage); // Load the main profile image from Firebase
+        setName(data.nickName);
       }
     };
 
@@ -26,6 +28,7 @@ export default function MyProfileScreen({ navigation }) {
     <LinearGradient colors={['#1E90FF', '#87CEFA']} style={styles.container}>
       <View style={styles.profileContainer}>
         {/* Display Main Profile Picture */}
+        <Text style={styles.nameText}>{name || 'Your Name'} </Text>
         <View style={styles.imageContainer}>
           {mainImage ? (
             <Image source={{ uri: mainImage }} style={styles.image} />
@@ -74,8 +77,8 @@ const styles = StyleSheet.create({
     paddingVertical: 40,
   },
   imageContainer: {
-    width: 150,
-    height: 150,
+    width: 250,
+    height: 250,
     borderRadius: 75,
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
@@ -119,5 +122,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     backgroundColor: '#005bb5',
     paddingVertical: 10,
+  },
+  nameText : {
+    fontSize: 45,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginBottom: 30,
   },
 });

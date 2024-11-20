@@ -14,6 +14,7 @@ export default function ProfileSetupScreen({ navigation }) {
   const [gender, setGender] = useState('');
   const [preference, setPreference] = useState('');
   const [bio, setBio] = useState('');
+  const [nickName, setNickname] = useState('')
 
   const handleImagePick = async (index = -1) => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -65,6 +66,10 @@ export default function ProfileSetupScreen({ navigation }) {
       Alert.alert("Profile Incomplete", "Please select your gender and who you're interested in.");
       return;
     }
+    if (!nickName){
+      Alert.alert('Please enter a nickname');
+      return;
+    }
 
     try {
       // Upload images to Firebase Storage and get URLs
@@ -83,6 +88,7 @@ export default function ProfileSetupScreen({ navigation }) {
         gender,
         preference,
         bio,
+        nickName,
       };
 
       await setDoc(doc(db, 'users', auth.currentUser.uid), profileData);
@@ -140,7 +146,15 @@ export default function ProfileSetupScreen({ navigation }) {
                 />
               ) : null
             )}
-
+            {/* NICKNAME */}
+            <Text style ={styles.label}> Set a Nickname!</Text>
+            <TextInput
+            placeholder="Enter your nickName"
+            placeholderTextColor="#aaa"
+            style={styles.nicknameInput}
+            value={nickName}
+            onChangeText={setNickname}
+            />
             {/* Gender Selection */}
             <Text style={styles.label}>I am a</Text>
             <View style={styles.selectionContainer}>
@@ -298,4 +312,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  nicknameInput: {
+    borderBottomWidth: 1, 
+    borderBottomColor: '#white',
+    paddingVertical: 5,
+    fontSize: 16, 
+    color: '#white',
+    marginBottom: 20, 
+    width: '80%',
+  }
 });

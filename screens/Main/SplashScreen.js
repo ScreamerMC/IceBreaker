@@ -19,7 +19,7 @@ export default function SplashScreen({ navigation }) {
     // Check user authentication and navigate after 3.5 seconds
     const timer = setTimeout(() => {
       if (auth.currentUser) {
-        navigation.replace('ProfileSetup'); // Redirect if logged in
+        navigation.replace('Swipe'); // Redirect if logged in
       } else {
         navigation.replace('Login');
       }

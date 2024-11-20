@@ -12,6 +12,7 @@ export default function SettingsScreen({ navigation }) {
   const [password, setPassword] = useState(''); // Store password for re-authentication
   const [showPasswordInput, setShowPasswordInput] = useState(false); // Control visibility of password field
   const user = auth.currentUser;
+
   const handleDeleteAccountConfirmation = () => {
     Alert.alert(
       "Delete Account",
@@ -26,6 +27,34 @@ export default function SettingsScreen({ navigation }) {
       ]
     );
   };
+
+  const handlePause = () => {
+    try {
+      Alert.alert(
+        "Pause Account",
+        "Pausing your account will make you invisible to others until you sign back in. Do you want to proceed?",
+        [
+          { text: "Cancel", style: "cancel" },
+          {
+            text: "Pause",
+            style: "destructive",
+            onPress: async () => {
+              // Update the user status in Firestore to "paused"
+              const userRef = doc(db, "users", user.uid);
+              await updateDoc(userRef, { status: "paused" });
+              Alert.alert("Success", "Your account has been paused.");
+              await auth.signOut(); // Log the user out
+              navigation.replace("Login"); // Redirect to the login screen
+            },
+          },
+        ]
+      );
+    } catch (error) {
+      console.error("Error pausing account:", error);
+      Alert.alert("Error", "Could not pause your account. Please try again.");
+    }
+  };
+  
   const handleLogout = async () => {
     try {
       await auth.signOut();
@@ -51,20 +80,28 @@ export default function SettingsScreen({ navigation }) {
       await reauthenticateWithCredential(user, credential);
       console.log("Re-authentication successful.");
 
-
-
       // Delete Storage 
       const storage = getStorage();
       const userImagesFolderRef = ref(storage, `users/${user.uid}/images`)
 
       try {
         const folderContents = await listAll(userImagesFolderRef);
-        const deletePromises = folderContents.items.map((itemRef) => deleteObject(itemRef));
-        await Promise.all(deletePromises);
-        console.log("USER IMAGES GONE");
+        if (folderContents.items.length === 0){
+          console.log('no images to delete')
+        }
+
+        const deletePromises = folderContents.items.map(async (itemRef) => {
+          try {
+            await deleteObject(itemRef);
+          } catch (error) {
+            console.error('error deleting')
+          }
+        });
+      await Promise.all(deletePromises)
       } catch (storageError) {
         console.error('COULD NOT DELETE USER IMAGES BRO')
         Alert.alert('Error', 'Could not delete images')
+        return;
       }
       // Delete Firestore document
       console.log("Deleting user data from Firestore...");
@@ -79,7 +116,7 @@ export default function SettingsScreen({ navigation }) {
       // Log out and navigate to Login screen
       console.log("Signing out...");
       await auth.signOut();
-      navigation.replace("Login");
+      navigation.navigate('Login');
       console.log("User signed out and navigated to login screen.");
     } catch (error) {
       console.error("Error deleting account:", error);
@@ -131,6 +168,10 @@ export default function SettingsScreen({ navigation }) {
             </TouchableOpacity>
           </>
         )}
+        <TouchableOpacity style={styles.logoutButton} onPress={handlePause}>
+        <Ionicons name="alarm-outline" size={24} color="#FFFFFF" />
+        <Text style={styles.logoutButtonText}>Pause Account</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Ionicons name="log-out-outline" size={24} color="#FFFFFF" />
           <Text style={styles.logoutButtonText}>Logout</Text>
@@ -170,6 +211,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 10,
+    width: '60%',
   },
   deleteButtonText: {
     color: '#FFFFFF',
@@ -208,6 +250,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 10,
     marginTop: 20,
+    width: '60%',
   },
   logoutButtonText: {
     color: '#FFFFFF',

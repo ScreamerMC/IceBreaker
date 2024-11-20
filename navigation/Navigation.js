@@ -10,7 +10,6 @@ import ChatScreen from '../screens/Main/ChatScreen';
 import VoiceChat from '../screens/Main/VoiceChat';
 import MyProfileScreen from '../screens/Main/MyProfileScreen';
 import { auth } from '../firebaseConfig';
-import { ActivityIndicator, View } from 'react-native';
 import SettingsScreen from '../screens/Settings/SettingsScreen';
 import EditProfile from '../screens/Settings/EditProfile'
 

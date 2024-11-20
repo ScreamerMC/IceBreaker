@@ -8,15 +8,31 @@ import { db } from '../../firebaseConfig';
 
 const { width, height } = Dimensions.get('window');
 
-export default function EditProfile({ navigation, route }) {
-
+export default function EditProfile({ navigation }) {
+  useEffect(() => {
+    
+  })
   // State variables to hold user profile details
-  const [mainImage, setMainImage] = useState(user.mainImage || null);
-  const [extraImages, setExtraImages] = useState(user.extraImages || [null, null, null, null, null]);
-  const [captions, setCaptions] = useState(user.captions || ['', '', '', '', '']);
-  const [gender, setGender] = useState(user.gender || '');
-  const [preference, setPreference] = useState(user.preference || '');
-  const [bio, setBio] = useState(user.bio || '');
+  const initialState = {
+    mainImage: user.mainImage,
+    extraImages:user.extraImages || [null, null, null, null, null],
+    captions: user.captions || ['','','','',''],
+    gender: user.gender,
+    preference: user.preference,
+    bio: user.bio || '',
+    nickName: user.nickName, 
+  }
+
+  function profileReducer(state, action){
+    switch (action.type) {
+      case 'UPDATE_FIELD':
+        return { ...state, [action.field]: action.value};
+      default:
+        return state; 
+    }
+  }
+  
+  const [state, dispatch] = useReducer(profileReducer,initialState);
 
   const handleImagePick = async (index = -1) => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -26,7 +42,7 @@ export default function EditProfile({ navigation, route }) {
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'],
       allowsEditing: true,
       aspect: [4, 3],
       quality: 0.5,
@@ -35,22 +51,24 @@ export default function EditProfile({ navigation, route }) {
     if (!result.canceled) {
       const selectedImageUri = result.assets[0].uri;
       if (index === -1) {
-        setMainImage(selectedImageUri);
+        dispatch({type: 'UPDATE_FIELD', field: 'mainImage', value: selectedImageUri
+        })
       } else {
-        const updatedImages = [...extraImages];
+        const updatedImages = [...profile.extraImages];
         updatedImages[index] = selectedImageUri;
-        setExtraImages(updatedImages);
+        dispatch({type: 'UPDATE_FIELD', field: 'extraImages', value: selectedImageUri})
       }
     }
   };
 
   const handleSaveChanges = async () => {
+    const { mainImage, gender, preference, bio, extraImages, captions, nickName } = profile; 
+    
     if (!mainImage || !gender || !preference) {
       Alert.alert("Profile Incomplete", "Please complete all required fields.");
       return;
     }
 
-    // Here, you would upload the images to Firebase Storage and update the user profile in Firestore
     try {
       const updatedProfile = {
         mainImage,
@@ -59,9 +77,9 @@ export default function EditProfile({ navigation, route }) {
         gender,
         preference,
         bio,
+        nickName,
       };
 
-      // Example Firebase Firestore update (replace 'users' and user.id with your collection and user identifier)
       await db.collection('users').doc(user.id).update(updatedProfile);
 
       Alert.alert("Profile Updated", "Your profile has been successfully updated.");
@@ -169,5 +187,118 @@ export default function EditProfile({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-  // (Use your existing styles here or add new ones as needed)
+  container: {
+    flex: 1,
+    backgroundColor: '#1E90FF', // Deep blue as a base
+  },
+  keyboardAvoidingView: {
+    flex: 1,
+  },
+  scrollContainer: {
+    padding: 20,
+    paddingBottom: 50,
+  },
+  contentContainer: {
+    alignItems: 'center',
+  },
+  label: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#ffffff', // White for contrast
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  imageUpload: {
+    width: width * 0.5,
+    height: width * 0.5,
+    borderRadius: width * 0.25,
+    backgroundColor: '#87CEFA', // Light sky blue for placeholder
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    marginBottom: 20,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  imagePlaceholder: {
+    color: '#f0f8ff', // Alice blue for text
+    fontSize: 16,
+  },
+  extraImagesContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  extraImageUpload: {
+    width: width * 0.25,
+    height: width * 0.25,
+    backgroundColor: '#B0E0E6', // Powder blue for extra image placeholders
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 5,
+    overflow: 'hidden',
+  },
+  extraImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  captionInput: {
+    width: '100%',
+    padding: 10,
+    marginVertical: 5,
+    backgroundColor: '#F8F8FF', // Ghost white for input fields
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#87CEFA', // Light sky blue border
+    color: '#333',
+  },
+  selectionContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 10,
+  },
+  optionButton: {
+    padding: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ffffff', // White for border
+    backgroundColor: 'rgba(255, 255, 255, 0.2)', // Transparent white
+  },
+  selectedButton: {
+    backgroundColor: '#ffffff', // White for selected button
+  },
+  optionText: {
+    color: '#ffffff', // White text
+    fontSize: 16,
+  },
+  bioInput: {
+    width: '100%',
+    height: 100,
+    padding: 10,
+    marginTop: 10,
+    backgroundColor: '#F8F8FF', // Ghost white for bio input
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#87CEFA', // Light blue border
+    color: '#333',
+    textAlignVertical: 'top',
+  },
+  saveButton: {
+    width: '100%',
+    backgroundColor: '#4682B4', // Steel blue for button
+    padding: 15,
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  saveButtonTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#FFFFFF', // White for button text
+  },
 });

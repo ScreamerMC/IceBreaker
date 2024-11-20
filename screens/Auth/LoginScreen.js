@@ -22,7 +22,7 @@ export default function LoginScreen({ navigation }) {
   
     try {
       await login(email, password);
-      navigation.replace('ProfileSetup');
+      navigation.replace('Swipe');
     } catch (error) {
       Alert.alert('Login Failed', error.message);
     }
