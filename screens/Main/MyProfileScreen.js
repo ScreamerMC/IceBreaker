@@ -40,11 +40,11 @@ export default function MyProfileScreen({ navigation }) {
         {/* Profile Actions */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.profileButton} onPress={() => navigation.navigate('EditProfile')}>
-            <Ionicons name="pencil-outline" size={24} color="#FFFFFF" />
+            <Ionicons name="pencil-outline" size={24} color="#4682B4'," />
             <Text style={styles.buttonText}>Edit Profile</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.profileButton} onPress={() => navigation.navigate('Settings')}>
-            <Ionicons name="settings-outline" size={24} color="#FFFFFF" />
+            <Ionicons name="settings-outline" size={24} color="#4682B4" />
             <Text style={styles.buttonText}>Settings</Text>
           </TouchableOpacity>
         </View>
@@ -101,17 +101,18 @@ const styles = StyleSheet.create({
   profileButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FF4500',
+    backgroundColor: '#FFFFFF',
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 20,
     marginHorizontal: 10,
   },
   buttonText: {
-    color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: 'bold',
     marginLeft: 5,
+    color: '#4682B4',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
   bottomNav: {
     position: 'absolute',

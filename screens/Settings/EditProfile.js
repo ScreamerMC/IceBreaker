@@ -4,17 +4,17 @@ import { Button } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as ImagePicker from 'expo-image-picker';
 import { Dimensions } from 'react-native';
-import { db } from '../../firebaseConfig'; // Ensure firebaseConfig is correctly set up and exports `db`
+import { db } from '../../firebaseConfig';
 import { getAuth } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore'; // Import Firestore methods
-import { Ionicons } from '@expo/vector-icons';
+import { doc, getDoc } from 'firebase/firestore';
+
 const { width } = Dimensions.get('window');
 
 export default function EditProfile({ navigation }) {
   const [profile, setProfile] = useState({
     mainImage: '',
-    extraImages: ['', '', '', ''], // Array for extra images
-    captions: ['', '', '', ''], // Array for captions
+    extraImages: ['', '', '', ''],
+    captions: ['', '', '', ''],
     gender: '',
     preference: '',
     bio: '',
@@ -22,19 +22,18 @@ export default function EditProfile({ navigation }) {
   });
 
   const [loading, setLoading] = useState(true);
-  const auth = getAuth(); // Get Firebase Auth instance
-  const user = auth.currentUser; // Get the current user
+  const auth = getAuth();
+  const user = auth.currentUser;
 
   useEffect(() => {
-    // Fetch user profile data from Firestore
     const fetchUserProfile = async () => {
       try {
         if (user) {
-          const userRef = doc(db, 'users', user.uid); // Firestore document reference
+          const userRef = doc(db, 'users', user.uid);
           const userSnap = await getDoc(userRef);
 
           if (userSnap.exists()) {
-            setProfile(userSnap.data()); // Populate the state with user data
+            setProfile(userSnap.data());
           } else {
             console.log('No such user profile found!');
           }
@@ -116,15 +115,15 @@ export default function EditProfile({ navigation }) {
 
   return (
     <LinearGradient colors={['#1E90FF', '#87CEFA']} style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <Text style={styles.backButtonText}>← Back</Text>
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Edit Profile</Text>
+      </View>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.keyboardAvoidingView}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.contentContainer}>
-            <View style={styles.header}>
-              <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                <Ionicons name="arrow-back-outline" size={24} color="#FFFFFF" />
-              </TouchableOpacity>
-              <Text style={styles.title}>Edit Profile</Text>
-            </View>
             <Text style={styles.label}>Main Profile Picture</Text>
             <TouchableOpacity onPress={() => handleImagePick(-1)} style={styles.imageUpload}>
               {profile.mainImage ? (
@@ -134,13 +133,19 @@ export default function EditProfile({ navigation }) {
               )}
             </TouchableOpacity>
 
-            {/* Remaining fields */}
-
             <Text style={styles.label}>Nickname</Text>
             <TextInput
               style={styles.captionInput}
               value={profile.nickName}
               placeholder="Enter your nickname"
+              onChangeText={(text) => setProfile((prev) => ({ ...prev, nickName: text }))}
+            />
+
+            <Text style={styles.label}>Bio</Text>
+            <TextInput
+              style={styles.captionInput}
+              value={profile.bio}
+              placeholder="Enter your bio"
               onChangeText={(text) => setProfile((prev) => ({ ...prev, nickName: text }))}
             />
 
@@ -161,12 +166,29 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#1E90FF',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
-  loadingText: {
-    fontSize: 18,
-    color: '#ffffff',
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    backgroundColor: '#4682B4',
+  },
+  backButton: {
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: '#FFFFFF',
+    marginRight: 15,
+  },
+  backButtonText: {
+    color: '#4682B4',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
   },
   keyboardAvoidingView: {
     flex: 1,
@@ -226,22 +248,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#FFFFFF',
   },
-  header: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 30, 
-    paddingHorizontal: 30,
-    marginBottom: 30,
-    padding: 20,
-    gap: 20,
-    borderColor:'#FFFFFF',
-    borderWidth: 2,
-    borderRadius: 10
-  },
-  title: {
-    fontSize: 30,
-    color: '#FFFFFF'
-
-  }
 });
