@@ -12,6 +12,13 @@ TASK LIST
 - Make Save Profile Button only work every 10 seconds
 - use less useState 
 - OPTIMAZE FOR PERFORMANCE
+- Pause Account button might not be working
+- Look into switching the Alert.alert to toast-react-native
+
+
+
+
+
 
 ## License
 This project is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License. You may not use this work for commercial purposes. For more details, see the LICENSE file.
