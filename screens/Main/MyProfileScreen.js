@@ -40,7 +40,7 @@ export default function MyProfileScreen({ navigation }) {
         {/* Profile Actions */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.profileButton} onPress={() => navigation.navigate('EditProfile')}>
-            <Ionicons name="pencil-outline" size={24} color="#4682B4'," />
+            <Ionicons name="pencil-outline" size={24} color="#4682B4" />
             <Text style={styles.buttonText}>Edit Profile</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.profileButton} onPress={() => navigation.navigate('Settings')}>

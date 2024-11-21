@@ -146,7 +146,7 @@ export default function SettingsScreen({ navigation }) {
         {/* Show "Delete Account" button initially */}
         {!showPasswordInput && (
           <TouchableOpacity style={styles.deleteButton} onPress={handleDeleteAccountConfirmation}>
-            <Ionicons name="trash-outline" size={24} color="#FFFFFF" />
+            <Ionicons name="trash-outline" size={24} color="#4682B4" />
             <Text style={styles.deleteButtonText}>Delete Account</Text>
           </TouchableOpacity>
         )}
@@ -169,11 +169,11 @@ export default function SettingsScreen({ navigation }) {
           </>
         )}
         <TouchableOpacity style={styles.logoutButton} onPress={handlePause}>
-        <Ionicons name="alarm-outline" size={24} color="#FFFFFF" />
+        <Ionicons name="alarm-outline" size={24} color="#4682B4" />
         <Text style={styles.logoutButtonText}>Pause Account</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Ionicons name="log-out-outline" size={24} color="#FFFFFF" />
+          <Ionicons name="log-out-outline" size={24} color="#4682B4" />
           <Text style={styles.logoutButtonText}>Logout</Text>
         </TouchableOpacity>
       </View>
@@ -207,14 +207,14 @@ const styles = StyleSheet.create({
   deleteButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FF4500',
+    backgroundColor: '#FFFFFF',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 10,
     width: '60%',
   },
   deleteButtonText: {
-    color: '#FFFFFF',
+    color: '#4682B4',
     fontSize: 18,
     fontWeight: 'bold',
     marginLeft: 8,
@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
   logoutButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FF4500',
+    backgroundColor: '#FFFFFF',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 10,
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
     width: '60%',
   },
   logoutButtonText: {
-    color: '#FFFFFF',
+    color: '#4682B4',
     fontSize: 18,
     fontWeight: 'bold',
     marginLeft: 8,
