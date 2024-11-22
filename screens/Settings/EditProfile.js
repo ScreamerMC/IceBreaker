@@ -133,6 +133,31 @@ export default function EditProfile({ navigation }) {
               )}
             </TouchableOpacity>
 
+            <Text style={styles.label}> Additional Pictures </Text>
+            <View style={styles.extraImagesContainer}>
+              {profile.extraImages.map((image,index) => (
+                <View key={index} style={styles.imageWithCaption}>
+                  <TouchableOpacity onPress={() => handleImagePick(index)} style={styles.extraImageUpload}>
+                    {image ? (
+                      <Image source={{ uri:image }} style={styles.extraImage} />
+                    ) : ( 
+                      <Text style={styles.imagePlaceholder} >+ </Text>
+                    )}
+                  </TouchableOpacity>
+                  <TextInput 
+                    placeholder={`Caption for Picture ${index + 1}`}
+                    placeholderTextColor={"#aaa"}
+                    style={style.captionInput}
+                    value={profile.captions[index]}
+                    onChangeText={(text) => {
+                      const updatedCaptions = [...profile.captions];
+                      updatedCaptions[index] = text;
+                      setProfile((prev) => ({ ...prev, captions: updatedCaptions}));
+                    }}
+                    />
+                </View>
+                  ))}
+            </View>
             <Text style={styles.label}>Nickname</Text>
             <TextInput
               style={styles.captionInput}

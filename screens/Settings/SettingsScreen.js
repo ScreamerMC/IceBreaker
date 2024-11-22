@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert, TextInput } from 'reac
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { auth, db } from '../../firebaseConfig';
-import { doc, deleteDoc } from 'firebase/firestore';
+import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
 import { getStorage, ref, listAll, deleteObject } from "firebase/storage";
 
@@ -39,12 +39,17 @@ export default function SettingsScreen({ navigation }) {
             text: "Pause",
             style: "destructive",
             onPress: async () => {
+              try{ 
               // Update the user status in Firestore to "paused"
               const userRef = doc(db, "users", user.uid);
               await updateDoc(userRef, { status: "paused" });
               Alert.alert("Success", "Your account has been paused.");
               await auth.signOut(); // Log the user out
-              navigation.replace("Login"); // Redirect to the login screen
+              navigation.replace("Splash"); // Redirect to the login screen  
+              } catch (error) {
+                console.error('Error pausing', error);
+                Alert.alert('Error', 'Could not pause your account.');
+              }
             },
           },
         ]

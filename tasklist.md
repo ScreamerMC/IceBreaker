@@ -14,7 +14,7 @@ TASK LIST
 - OPTIMAZE FOR PERFORMANCE
 - Pause Account button might not be working
 - Look into switching the Alert.alert to toast-react-native
-
+- Refresh Button in Swiping Screen 
 
 
 
