@@ -6,7 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { Dimensions } from 'react-native';
 import { db } from '../../firebaseConfig';
 import { getAuth } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
 const { width } = Dimensions.get('window');
 
@@ -95,7 +95,8 @@ export default function EditProfile({ navigation }) {
         nickName,
       };
 
-      await db.collection('users').doc(user.uid).update(updatedProfile);
+      const userDocRef = doc(db, 'users', user.uid);
+      await updateDoc(userDocRef, updatedProfile);
 
       Alert.alert('Profile Updated', 'Your profile has been successfully updated.');
       navigation.goBack();
@@ -147,7 +148,7 @@ export default function EditProfile({ navigation }) {
                   <TextInput 
                     placeholder={`Caption for Picture ${index + 1}`}
                     placeholderTextColor={"#aaa"}
-                    style={style.captionInput}
+                    style={styles.captionInput}
                     value={profile.captions[index]}
                     onChangeText={(text) => {
                       const updatedCaptions = [...profile.captions];
@@ -165,7 +166,53 @@ export default function EditProfile({ navigation }) {
               placeholder="Enter your nickname"
               onChangeText={(text) => setProfile((prev) => ({ ...prev, nickName: text }))}
             />
+            {/* Gender Selection */}
+            <Text style={styles.label}>I am a</Text>
+            <View style={styles.selectionContainer}>
+              <TouchableOpacity
+                onPress={() => setProfile((prev) => ({ ...prev, gender: 'Male' }))}
+                style={[
+                  styles.optionButton,
+                  profile.gender === 'Male' && styles.selectedButton,
+                ]}
+              >
+                <Text style={styles.optionText}>Male</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setProfile((prev) => ({ ...prev, gender: 'Female' }))}
+                style={[
+                  styles.optionButton,
+                  profile.gender === 'Female' && styles.selectedButton,
+                ]}
+              >
+                <Text style={styles.optionText}>Female</Text>
+              </TouchableOpacity>
+            </View>
 
+            {/* Preference Selection */}
+            <Text style={styles.label}>Looking for</Text>
+            <View style={styles.selectionContainer}>
+              <TouchableOpacity
+                onPress={() => setProfile((prev) => ({ ...prev, preference: 'Male' }))}
+                style={[
+                  styles.optionButton,
+                  profile.preference === 'Male' && styles.selectedButton,
+                ]}
+              >
+                <Text style={styles.optionText}>Male</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setProfile((prev) => ({ ...prev, preference: 'Female' }))}
+                style={[
+                  styles.optionButton,
+                  profile.preference === 'Female' && styles.selectedButton,
+                ]}
+              >
+                <Text style={styles.optionText}>Female</Text>
+              </TouchableOpacity>
+            </View>
+
+            
             <Text style={styles.label}>Bio</Text>
             <TextInput
               style={styles.captionInput}
@@ -191,6 +238,60 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#1E90FF',
+  },
+  selectionContainer:{
+    flexDirection: 'row',
+    justifyContent:'space-between',
+    marginVertical: 10,
+  },
+  optionButton: {
+    flex: 1,
+    paddingVertical: 10,
+    marginHorizontal: 5, 
+    borderWidth: 1,
+    borderRadius: 5,
+    alignItems: 'center',
+    backgroundColor: '#F8F8FF',
+    borderColor: '#4682B4',
+  },
+  selectedButton: {
+    backgroundColor: '#4682B4',
+    borderColor: '#1E90FF',
+  },
+  optionText: {
+    color: '#333',
+    fontWeight: 'bold',
+  },
+  extraImagesContainer: {
+    flexDirection:'row',
+    flexWrap:'wrap',
+    justifyContent:'space-between',
+    marginTop: 10,
+  },
+  imageWithCaption: {
+    width: '50%',
+    marginBotton: 10,
+    alignItems:'center',
+  },
+  extraImageUpload: {
+    width: width * 0.4,
+    height: width * 0.4,
+    borderRadius: 10,
+    backgroundColor: '#87CEFA',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  extraImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover'
+  },
+  loadingText: {
+    color: '#FFFFFF',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   header: {
     flexDirection: 'row',

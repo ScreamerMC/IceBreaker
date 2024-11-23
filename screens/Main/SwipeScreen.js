@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity, Animated, 
 import { LinearGradient } from 'expo-linear-gradient';
 import { db, auth } from '../../firebaseConfig';
 import { collection, query, where, getDocs } from 'firebase/firestore';
-import { Ionicons } from '@expo/vector-icons'; // Import icons for button styling
+import { Ionicons } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get('window');
 
