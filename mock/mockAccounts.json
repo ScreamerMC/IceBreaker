@@ -1,0 +1,198 @@
+[
+    {
+      "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=TechDude",
+      "extraImages": [
+        "https://api.dicebear.com/6.x/bottts/svg?seed=Adventure",
+        "https://api.dicebear.com/6.x/micah/svg?seed=Skyline"
+      ],
+      "captions": [
+        "Loving life at the beach!",
+        "Hiking adventures 🏞️"
+      ],
+      "gender": "Male",
+      "preference": "Female",
+      "bio": "Adventure seeker. Tech enthusiast. Coffee lover ☕.",
+      "nickName": "TechDude"
+    },
+    {
+      "mainImage": "https://api.dicebear.com/6.x/micah/svg?seed=SunsetQueen",
+      "extraImages": [
+        "https://api.dicebear.com/6.x/adventurer/svg?seed=CityLife",
+        "https://api.dicebear.com/6.x/bottts/svg?seed=ChasingSunsets"
+      ],
+      "captions": [
+        "City skyline views 🌆",
+        "Chasing sunsets 🌅"
+      ],
+      "gender": "Female",
+      "preference": "Male",
+      "bio": "Bookworm, foodie, and aspiring artist 🎨.",
+      "nickName": "SunsetQueen"
+    },
+    {
+      "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=NomadSoul",
+      "extraImages": [
+        "https://api.dicebear.com/6.x/micah/svg?seed=Explorer",
+        "https://api.dicebear.com/6.x/bottts/svg?seed=Nature"
+      ],
+      "captions": [
+        "Weekend vibes 🍹",
+        "Road trip memories 🚗"
+      ],
+      "gender": "Non-binary",
+      "preference": "All",
+      "bio": "Traveler, photographer, and music enthusiast 🎵.",
+      "nickName": "NomadSoul"
+    },
+    {
+      "mainImage": "https://api.dicebear.com/6.x/bottts/svg?seed=TeaLover",
+      "extraImages": [
+        "https://api.dicebear.com/6.x/adventurer/svg?seed=BookLover",
+        "https://api.dicebear.com/6.x/micah/svg?seed=WriterLife"
+      ],
+      "captions": [
+        "Winter wonderland ❄️",
+        "Coffee shop musings ☕"
+      ],
+      "gender": "Female",
+      "preference": "Female",
+      "bio": "Writer, dreamer, and tea aficionado 🍵.",
+      "nickName": "TeaLover"
+    },
+    {
+      "mainImage": "https://api.dicebear.com/6.x/micah/svg?seed=ChefCoder",
+      "extraImages": [
+        "https://api.dicebear.com/6.x/bottts/svg?seed=GamingLife",
+        "https://api.dicebear.com/6.x/adventurer/svg?seed=CodeMaster"
+      ],
+      "captions": [
+        "Game night champion 🎮",
+        "Nature's best 🌳"
+      ],
+      "gender": "Male",
+      "preference": "Male",
+      "bio": "Gamer, programmer, and part-time chef 🍳.",
+      "nickName": "ChefCoder"
+    },
+    {
+      "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=StarGazer",
+      "extraImages": [
+        "https://api.dicebear.com/6.x/micah/svg?seed=Cosmic",
+        "https://api.dicebear.com/6.x/bottts/svg?seed=GalacticExplorer"
+      ],
+      "captions": [
+        "Looking at the stars 🌌",
+        "Dreaming big 💫"
+      ],
+      "gender": "Non-binary",
+      "preference": "All",
+      "bio": "Astrology enthusiast and night owl 🦉.",
+      "nickName": "StarGazer"
+    },
+    {
+      "mainImage": "https://api.dicebear.com/6.x/micah/svg?seed=OceanLover",
+      "extraImages": [
+        "https://api.dicebear.com/6.x/adventurer/svg?seed=SeaBreeze",
+        "https://api.dicebear.com/6.x/bottts/svg?seed=DivingDeep"
+      ],
+      "captions": [
+        "Life is better at the beach 🌊",
+        "Exploring underwater treasures 🐠"
+      ],
+      "gender": "Female",
+      "preference": "Male",
+      "bio": "Marine biologist and environmental advocate 🌱.",
+      "nickName": "OceanLover"
+    },
+    {
+      "mainImage": "https://api.dicebear.com/6.x/bottts/svg?seed=CryptoKing",
+      "extraImages": [
+        "https://api.dicebear.com/6.x/adventurer/svg?seed=TechInvestor",
+        "https://api.dicebear.com/6.x/micah/svg?seed=CodeWhiz"
+      ],
+      "captions": [
+        "To the moon 🚀",
+        "HODL! 💎"
+      ],
+      "gender": "Male",
+      "preference": "Female",
+      "bio": "Crypto enthusiast and blockchain developer 💻.",
+      "nickName": "CryptoKing"
+    },
+    {
+      "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=FitnessFan",
+      "extraImages": [
+        "https://api.dicebear.com/6.x/micah/svg?seed=YogaPose",
+        "https://api.dicebear.com/6.x/bottts/svg?seed=GymRat"
+      ],
+      "captions": [
+        "Stronger every day 💪",
+        "Mind over matter 🧘"
+      ],
+      "gender": "Female",
+      "preference": "Male",
+      "bio": "Personal trainer and wellness coach 🏋️‍♀️.",
+      "nickName": "FitnessFan"
+    },
+    {
+      "mainImage": "https://api.dicebear.com/6.x/micah/svg?seed=FilmFanatic",
+      "extraImages": [
+        "https://api.dicebear.com/6.x/adventurer/svg?seed=Cinephile",
+        "https://api.dicebear.com/6.x/bottts/svg?seed=DirectorLife"
+      ],
+      "captions": [
+        "Movie nights are the best 🎬",
+        "Cinematography lover 🎥"
+      ],
+      "gender": "Male",
+      "preference": "Female",
+      "bio": "Filmmaker and aspiring director 📽️.",
+      "nickName": "FilmFanatic"
+    },
+    {
+      "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=ChefLife",
+      "extraImages": [
+        "https://api.dicebear.com/6.x/micah/svg?seed=Foodie",
+        "https://api.dicebear.com/6.x/bottts/svg?seed=RecipeKing"
+      ],
+      "captions": [
+        "Creating culinary masterpieces 🍳",
+        "Food is love ❤️"
+      ],
+      "gender": "Male",
+      "preference": "All",
+      "bio": "Professional chef and food critic 👨‍🍳.",
+      "nickName": "ChefLife"
+    },
+    {
+      "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=NatureLover",
+      "extraImages": [
+        "https://api.dicebear.com/6.x/micah/svg?seed=Hiker",
+        "https://api.dicebear.com/6.x/bottts/svg?seed=EcoWarrior"
+      ],
+      "captions": [
+        "Preserving the planet 🌍",
+        "One hike at a time 🥾"
+      ],
+      "gender": "Female",
+      "preference": "Female",
+      "bio": "Environmental scientist and outdoor enthusiast 🌱.",
+      "nickName": "NatureLover"
+    },
+    {
+      "mainImage": "https://api.dicebear.com/6.x/micah/svg?seed=GameDev",
+      "extraImages": [
+        "https://api.dicebear.com/6.x/adventurer/svg?seed=PixelArt",
+        "https://api.dicebear.com/6.x/bottts/svg?seed=CodePixel"
+      ],
+      "captions": [
+        "Bringing stories to life 🎮",
+        "One pixel at a time 🎨"
+      ],
+      "gender": "Male",
+      "preference": "Female",
+      "bio": "Game developer and indie creator 🎲.",
+      "nickName": "GameDev"
+    }
+  ]
+  
