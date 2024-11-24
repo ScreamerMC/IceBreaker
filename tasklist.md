@@ -15,10 +15,7 @@ TASK LIST
 - Pause Account button might not be working
 - Look into switching the Alert.alert to toast-react-native
 - Refresh Button in Swiping Screen 
-
-
-
-
+- Look into adding dark mode/light mode
 
 ## License
 This project is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License. You may not use this work for commercial purposes. For more details, see the LICENSE file.

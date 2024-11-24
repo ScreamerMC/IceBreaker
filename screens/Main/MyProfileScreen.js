@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: 250,
     height: 250,
-    borderRadius: 75,
+    borderRadius: '50%',
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
     justifyContent: 'center',
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   },
   bottomNav: {
     position: 'absolute',
-    bottom: 20,
+    bottom: 0,
     left: 0,
     right: 0,
     flexDirection: 'row',
