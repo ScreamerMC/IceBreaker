@@ -106,7 +106,7 @@ export default function EditProfile({ navigation }) {
       Alert.alert('Error', 'Failed to update profile. Please try again.');
     }
   };
-
+  //THIS DOES NOTHING YET FIX IT  
   if (loading) {
     return (
       <View style={styles.container}>
