@@ -7,6 +7,7 @@ import { Dimensions } from 'react-native';
 import { db } from '../../firebaseConfig';
 import { getAuth } from 'firebase/auth';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
 
@@ -116,12 +117,14 @@ export default function EditProfile({ navigation }) {
 
   return (
     <LinearGradient colors={['#1E90FF', '#87CEFA']} style={styles.container}>
+      <SafeAreaView style={styles.SafeAreaView}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Text style={styles.backButtonText}>← Back</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Edit Profile</Text>
       </View>
+      </SafeAreaView>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.keyboardAvoidingView}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.contentContainer}>
@@ -235,6 +238,9 @@ export default function EditProfile({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  safeArea:{
+    backgroundColor: '#4682B4',
+  },
   container: {
     flex: 1,
     backgroundColor: '#1E90FF',
