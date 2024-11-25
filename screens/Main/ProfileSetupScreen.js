@@ -15,6 +15,7 @@ export default function ProfileSetupScreen({ navigation }) {
   const [preference, setPreference] = useState('');
   const [bio, setBio] = useState('');
   const [nickName, setNickname] = useState('')
+  const [loading, setLoading]  = useState(false);
 
   const handleImagePick = async (index = -1) => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -58,6 +59,8 @@ export default function ProfileSetupScreen({ navigation }) {
 
   
   const handleSaveProfile = async () => {
+    if (loading) return;
+
     if (!mainImage) {
       Alert.alert("Profile Incomplete", "Please upload a main profile picture.");
       return;
@@ -72,6 +75,7 @@ export default function ProfileSetupScreen({ navigation }) {
     }
 
     try {
+      setLoading(true);
       // Upload images to Firebase Storage and get URLs
       const mainImageUrl = await uploadImageToFirebase(mainImage, 'mainImage.jpg');
       const extraImagesUrls = await Promise.all(
@@ -97,6 +101,8 @@ export default function ProfileSetupScreen({ navigation }) {
     } catch (error) {
       console.error("Error saving profile:", error);
       Alert.alert("Error", "Failed to save profile. Please try again.");
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -192,10 +198,11 @@ export default function ProfileSetupScreen({ navigation }) {
 
             {/* Save Button */}
             <Button
-              title="Save Profile"
-              buttonStyle={styles.saveButton}
+              title={ loading ? "Saving..." : "Save Profile"}
+              buttonStyle={[styles.saveButton, loading && styles.saveButtonDisabled]}
               titleStyle={styles.saveButtonTitle}
               onPress={handleSaveProfile}
+              disabled={loading}
             />
           </View>
         </ScrollView>
@@ -307,6 +314,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 12,
     width: '100%',
+  },
+  saveButtonDisabled: {
+    backgroundColor:'#aaa'
   },
   saveButtonTitle: {
     fontSize: 18,

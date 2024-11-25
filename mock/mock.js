@@ -1,5 +1,6 @@
 const { db } = require('../firebaseConfig'); // Adjust path as per your structure
 const mockAccounts = require('./mockAccounts.json'); // Import mockAccounts.json
+require('firebase/firestore');
 const { collection, addDoc } = require('firebase/firestore');
 
 // Function to upload JSON data to Firestore
