@@ -28,7 +28,6 @@ export default function LoginScreen({ navigation }) {
     }
   };
   
-
   return (
     <LinearGradient colors={['#1E90FF', '#87CEFA']} style={styles.container}>
       <View style={styles.header}>

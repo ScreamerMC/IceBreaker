@@ -14,7 +14,7 @@ export default function SwipeScreen({ navigation }) {
 
   useEffect(() => {
     const fetchProfiles = async () => {
-      const userId = auth.currentUser.uid;
+      const userId = auth.currentUser.uid; //we need the current user so they dont see themselves
       const userDoc = await getDocs(collection(db, 'users'), userId);
       const userData = userDoc.data();
 

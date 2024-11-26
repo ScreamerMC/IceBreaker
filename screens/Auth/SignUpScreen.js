@@ -24,7 +24,7 @@ export default function SignUpScreen({ navigation }) {
       Alert.alert("Passwords Do Not Match", "Please ensure the passwords match.");
       return;
     }
-  
+    
     try {
       await signUp(email, password);
       navigation.replace('ProfileSetup');
