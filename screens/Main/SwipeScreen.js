@@ -14,6 +14,7 @@ export default function SwipeScreen({ navigation }) {
 
   useEffect(() => {
     const fetchProfiles = async () => {
+    
       const userId = auth.currentUser.uid; //we need the current user so they dont see themselves
       const userDoc = await getDocs(collection(db, 'users'), userId);
       const userData = userDoc.data();
@@ -33,9 +34,14 @@ export default function SwipeScreen({ navigation }) {
         .map((doc) => ({ id: doc.id, ...doc.data() }));
 
       setProfiles(profileData);
+      console.log(profileData);
+      console.log(userId);
+      console.log(profilesQuery);
     };
 
     fetchProfiles();
+  
+    console.log(profiles);
   }, []);
 
   const rotate = position.x.interpolate({
@@ -144,7 +150,10 @@ export default function SwipeScreen({ navigation }) {
           <Text style={styles.noProfilesText}>No more profiles to show right now. Please check back later!</Text>
         </View>
       )}
-
+      <TouchableOpacity OnPress={() => fetchProfiles()} style ={styles.refreshButton}>
+        <Ionicons name="refresh-circle-outline" size={24} color="#FFFFFF" />
+        <Text style={styles.refreshButtonText}>Refresh</Text>
+      </TouchableOpacity>
       {/* Updated bottom navigation buttons */}
       <View style={styles.bottomNav}>
       <TouchableOpacity onPress={() => navigation.navigate('MyProfile')} style={styles.navButton}>
@@ -161,6 +170,24 @@ export default function SwipeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  refreshButton: {
+    position: 'absolute',
+    bottom: 200,
+    backgroundColor: '#005bb5',
+    borderRadius: 20,
+    padding: 10,
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  refreshButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 5,
+  },
   container: {
     flex: 1,
     alignItems: 'center',
