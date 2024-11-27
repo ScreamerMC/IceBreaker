@@ -114,7 +114,9 @@ const styles = StyleSheet.create({
     right: 0,
     flexDirection: 'row',
     justifyContent: 'space-around',
+    alignItems: 'center',
     backgroundColor: '#005bb5',
-    paddingVertical: 10,
+    paddingVertical: 25,
+    height: 90,
   },
 });

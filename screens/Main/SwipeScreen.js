@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity, Animated, PanResponder } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity, Animated, PanResponder, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { db, auth } from '../../firebaseConfig';
 import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
@@ -9,7 +9,6 @@ const { width, height } = Dimensions.get('window');
 
 export default function SwipeScreen({ navigation }) {
   const [profiles, setProfiles] = useState([]);
-  const [isDisplayingProfile, setIsDisplayingProfile] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const position = useRef(new Animated.ValueXY()).current;
   
@@ -120,11 +119,18 @@ export default function SwipeScreen({ navigation }) {
             style={cardStyle}
             {...(isCurrent ? panResponder.panHandlers : {})}
           >
-            <Image source={{ uri: profile.mainImage }} style={styles.image} />
-            <View style={styles.profileInfo}>
-              <Text style={styles.name}>{profile.name}, {profile.age}</Text>
+            <ScrollView contentContainerStyle={styles.scrollContainer}>
+              <Image source={{ uri: profile.mainImage }} style={styles.image} />
+              <Text style={styles.name}>{profile.nickName}</Text>
               <Text style={styles.bio}>{profile.bio}</Text>
-            </View>
+
+              {profile.extraImages && profile.extraImages.map((image, idx) => (
+                <View key={idx} style={styles.extraImageContainer}>
+                  <Image source={{ uri: image }} style={styles.extraImage} />
+                  <Text style={styles.caption}>{profile.captions[idx]}</Text>
+                </View>
+              ))}
+            </ScrollView>
 
             {isCurrent && (
               <>
@@ -140,22 +146,21 @@ export default function SwipeScreen({ navigation }) {
         );
       })}
 
-      {profiles.length === 0 && (
+      {profiles.length === 0 && currentIndex >= profiles.length && (
         <View style={styles.noProfilesContainer}>
           <Image source={require('../../assets/ice_cube_logo.png')} style={styles.noProfilesLogo} />
           <Text style={styles.noProfilesText}>No more profiles to show right now. Please check back later!</Text>
         </View>
-        
       )}
+
       <View style={styles.bottomNav}>
-        <TouchableOpacity onPress={() => navigation.navigate('MyProfile')}>
-          <Ionicons name="person-circle-outline" size={32} color="#FFFFFF" />
+        <TouchableOpacity onPress={() => navigation.navigate('MyProfile')} style={styles.navButton}>
+          <Ionicons name="person-circle-outline" size={24} color="#FFFFFF" />
+          <Text style={styles.navButtonText}>My Profile</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Swipe')}>
-          <Ionicons name="heart-outline" size={32} color="#FFFFFF" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('ChatScreen')}>
-          <Ionicons name="chatbubbles-outline" size={32} color="#FFFFFF" />
+        <TouchableOpacity onPress={() => navigation.navigate('ChatScreen')} style={styles.navButton}>
+          <Ionicons name="chatbubbles-outline" size={24} color="#FFFFFF" />
+          <Text style={styles.navButtonText}>Chats</Text>
         </TouchableOpacity>
       </View>
     </LinearGradient>
@@ -163,36 +168,10 @@ export default function SwipeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  refreshButton: {
-    position: 'absolute',
-    bottom: 200,
-    backgroundColor: '#005bb5',
-    borderRadius: 20,
-    padding: 10,
-    borderRadius: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  bottomNav: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: '#005bb5',
-    paddingVertical: 10,
-  },
-  refreshButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginLeft: 5,
-  },
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   card: {
     width: width * 0.9,
@@ -204,27 +183,44 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 10,
     alignItems: 'center',
+    justifyContent: 'center',
+  },
+  scrollContainer: {
+    alignItems: 'center',
+    paddingVertical: 20,
   },
   image: {
     width: '100%',
-    height: '75%',
+    height: 300,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-  },
-  profileInfo: {
-    padding: 15,
-    alignItems: 'center',
   },
   name: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
+    marginTop: 10,
   },
   bio: {
     fontSize: 16,
     color: '#777',
     textAlign: 'center',
+    marginVertical: 10,
+  },
+  extraImageContainer: {
+    marginVertical: 10,
+    alignItems: 'center',
+  },
+  extraImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 10,
+  },
+  caption: {
+    fontSize: 14,
+    color: '#555',
     marginTop: 5,
+    textAlign: 'center',
   },
   likeBadge: {
     position: 'absolute',
@@ -272,11 +268,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingHorizontal: width * 0.1,
   },
+  bottomNav: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#005bb5',
+    paddingVertical: 25,
+    height: 90,
+  },
   navButton: {
-    backgroundColor: '#005bb5', // Button background color
-    borderRadius: 20,
-    paddingVertical: 8,
-    paddingHorizontal: 15,
     flexDirection: 'row',
     alignItems: 'center',
   },
