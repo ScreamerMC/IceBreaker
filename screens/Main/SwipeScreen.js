@@ -1,26 +1,27 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity, Animated, PanResponder } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { db, auth } from '../../firebaseConfig';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
 import { Ionicons } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get('window');
 
 export default function SwipeScreen({ navigation }) {
   const [profiles, setProfiles] = useState([]);
+  const [isDisplayingProfile, setIsDisplayingProfile] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const position = useRef(new Animated.ValueXY()).current;
-
+  
   useEffect(() => {
     const fetchProfiles = async () => {
-    
-      const userId = auth.currentUser.uid; //we need the current user so they dont see themselves
-      const userDoc = await getDocs(collection(db, 'users'), userId);
-      const userData = userDoc.data();
 
-      const userGender = userData.gender;
-      const userPreference = userData.preference;
+      const userId = auth.currentUser.uid;
+      const userRef = doc(db,'users',userId);
+      const userDoc = await getDoc(userRef); //this is all users
+
+      const { gender: userGender, preference: userPreference} = userDoc.data();
+
 
       const profilesQuery = query(
         collection(db, 'users'),
@@ -34,14 +35,9 @@ export default function SwipeScreen({ navigation }) {
         .map((doc) => ({ id: doc.id, ...doc.data() }));
 
       setProfiles(profileData);
-      console.log(profileData);
-      console.log(userId);
-      console.log(profilesQuery);
     };
 
     fetchProfiles();
-  
-    console.log(profiles);
   }, []);
 
   const rotate = position.x.interpolate({
@@ -149,20 +145,17 @@ export default function SwipeScreen({ navigation }) {
           <Image source={require('../../assets/ice_cube_logo.png')} style={styles.noProfilesLogo} />
           <Text style={styles.noProfilesText}>No more profiles to show right now. Please check back later!</Text>
         </View>
+        
       )}
-      <TouchableOpacity OnPress={() => fetchProfiles()} style ={styles.refreshButton}>
-        <Ionicons name="refresh-circle-outline" size={24} color="#FFFFFF" />
-        <Text style={styles.refreshButtonText}>Refresh</Text>
-      </TouchableOpacity>
-      {/* Updated bottom navigation buttons */}
       <View style={styles.bottomNav}>
-      <TouchableOpacity onPress={() => navigation.navigate('MyProfile')} style={styles.navButton}>
-          <Ionicons name="person-circle-outline" size={24} color="#FFFFFF" />
-          <Text style={styles.navButtonText}>My Profile</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('MyProfile')}>
+          <Ionicons name="person-circle-outline" size={32} color="#FFFFFF" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('ChatScreen')} style={styles.navButton}>
-          <Ionicons name="chatbubbles-outline" size={24} color="#FFFFFF" />
-          <Text style={styles.navButtonText}>Chats</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Swipe')}>
+          <Ionicons name="heart-outline" size={32} color="#FFFFFF" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('ChatScreen')}>
+          <Ionicons name="chatbubbles-outline" size={32} color="#FFFFFF" />
         </TouchableOpacity>
       </View>
     </LinearGradient>
@@ -182,6 +175,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  bottomNav: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    backgroundColor: '#005bb5',
+    paddingVertical: 10,
+  },
   refreshButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
@@ -190,9 +193,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingBottom: 80,
   },
   card: {
     width: width * 0.9,
@@ -271,14 +271,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'center',
     paddingHorizontal: width * 0.1,
-  },
-  bottomNav: {
-    position: 'absolute',
-    bottom: 100, // Moved up for better placement
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '80%',
-    paddingVertical: 10,
   },
   navButton: {
     backgroundColor: '#005bb5', // Button background color
