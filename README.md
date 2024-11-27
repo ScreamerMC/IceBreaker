@@ -1,4 +1,4 @@
-# Tinder Clone - React Native App
+# IceBreaker - React Native App
 
 Welcome to the Tinder Clone app! This is an open-source React Native application that uses Firebase for backend services. The app allows users to match with others and communicate through voice notes, which disappear after one week.
 
