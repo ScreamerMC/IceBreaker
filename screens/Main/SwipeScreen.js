@@ -1,158 +1,166 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity, Animated, PanResponder, ScrollView } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, StyleSheet, Dimensions, Image, Animated, TouchableOpacity } from 'react-native';
 import { db, auth } from '../../firebaseConfig';
 import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
-import { Ionicons } from '@expo/vector-icons';
-
+import { LinearGradient } from 'expo-linear-gradient';
+import Ionicons from '@expo/vector-icons/Ionicons';
 const { width, height } = Dimensions.get('window');
 
 export default function SwipeScreen({ navigation }) {
-  const [profiles, setProfiles] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const position = useRef(new Animated.ValueXY()).current;
-  
+  const [profiles, setProfiles] = useState([]); // Stores the profiles fetched from the database.
+  const [currentIndex, setCurrentIndex] = useState(0); // Tracks the currently visible profile index.
+  const position = useRef(new Animated.ValueXY()).current; // Animates the card's position during swipe gestures.
+  const touchStartRef = useRef({ x: 0, y: 0 }); // Tracks the initial touch position to calculate swipe movement.
+  const [swipeFeedback, setSwipeFeedback] = useState({text: '', color: 'transparent'});
+  // Fetches profiles based on the user's preferences.
   useEffect(() => {
     const fetchProfiles = async () => {
-
       const userId = auth.currentUser.uid;
-      const userRef = doc(db,'users',userId);
-      const userDoc = await getDoc(userRef); //this is all users
+      const userRef = doc(db, 'users', userId);
+      const userDoc = await getDoc(userRef);
+      const { gender: userGender, preference: userPreference } = userDoc.data();
 
-      const { gender: userGender, preference: userPreference} = userDoc.data();
-
-
+      // Query to fetch profiles matching user's preference and gender.
       const profilesQuery = query(
         collection(db, 'users'),
         where('gender', '==', userPreference),
         where('preference', '==', userGender)
       );
 
+      // Filters out the current user's profile and formats the data.
       const profileDocs = await getDocs(profilesQuery);
       const profileData = profileDocs.docs
         .filter((doc) => doc.id !== userId)
         .map((doc) => ({ id: doc.id, ...doc.data() }));
 
-      setProfiles(profileData);
+      setProfiles(profileData); // Sets the profiles state.
     };
 
     fetchProfiles();
   }, []);
 
-  const rotate = position.x.interpolate({
-    inputRange: [-width / 2, 0, width / 2],
-    outputRange: ['-10deg', '0deg', '10deg'],
-    extrapolate: 'clamp',
-  });
-
-  const likeOpacity = position.x.interpolate({
-    inputRange: [0, width / 4],
-    outputRange: [0, 1],
-    extrapolate: 'clamp',
-  });
-
-  const dislikeOpacity = position.x.interpolate({
-    inputRange: [-width / 4, 0],
-    outputRange: [1, 0],
-    extrapolate: 'clamp',
-  });
-
-  const nextCard = () => {
-    position.setValue({ x: 0, y: 0 });
-    setCurrentIndex((prevIndex) => prevIndex + 1);
+  // Records the starting point of the user's touch.
+  const handleTouchStart = (e) => {
+    const { pageX, pageY } = e.nativeEvent; // Captures the initial touch coordinates.
+    touchStartRef.current = { x: pageX, y: pageY }; // Saves the coordinates for later calculations.
   };
 
-  const panResponder = PanResponder.create({
-    onMoveShouldSetPanResponder: () => true,
-    onPanResponderMove: (event, gesture) => {
-      position.setValue({ x: gesture.dx, y: gesture.dy });
-    },
-    onPanResponderRelease: (event, gesture) => {
-      if (gesture.dx > 120) {
-        Animated.spring(position, {
-          toValue: { x: width + 100, y: gesture.dy },
-          useNativeDriver: false,
-        }).start(() => {
-          console.log('Liked', profiles[currentIndex].name);
-          nextCard();
-        });
-      } else if (gesture.dx < -120) {
-        Animated.spring(position, {
-          toValue: { x: -width - 100, y: gesture.dy },
-          useNativeDriver: false,
-        }).start(() => {
-          console.log('Disliked', profiles[currentIndex].name);
-          nextCard();
-        });
-      } else {
-        Animated.spring(position, {
-          toValue: { x: 0, y: 0 },
-          friction: 4,
-          useNativeDriver: false,
-        }).start();
-      }
-    },
-  });
+  // Calculates the movement of the user's touch and updates the card position.
+  const handleTouchMove = (e) => {
+    const { pageX, pageY } = e.nativeEvent; // Captures the current touch coordinates.
+    const dx = pageX - touchStartRef.current.x; // Horizontal distance moved.
+    const dy = pageY - touchStartRef.current.y; // Vertical distance moved.
+
+    // Updates the position of the card based on touch movement.
+    position.setValue({ x: dx, y: dy });
+
+    if (dx > 50) {
+      setSwipeFeedback({text: 'Like', color: '#00FF00'});
+    } else if (dx < -50) {
+      setSwipeFeedback({text: 'Dislike', color: '#FF0000'});
+    } else {
+      setSwipeFeedback({text: '', color: 'transparent'});
+    }
+  };
+
+  // Determines the swipe result (like/dislike) or resets the position if the swipe is insufficient.
+  const handleTouchEnd = (e) => {
+    const { pageX } = e.nativeEvent; // Captures the ending horizontal position of the touch.
+    const dx = pageX - touchStartRef.current.x; // Calculates the total horizontal movement.
+
+    if (dx > 50) {
+      // Right swipe detected: Like.
+      Animated.timing(position, {
+        toValue: { x: width + 100, y: 0 }, // Moves the card off-screen to the right.
+        duration: 300,
+        useNativeDriver: false,
+      }).start(() => {
+        console.log('Liked:', profiles[currentIndex]?.name);
+        setSwipeFeedback({ text: 'LIKE', color: '#00FF00' });
+        handleNextCard(); // Moves to the next card.
+      });
+    } else if (dx < -50) {
+      // Left swipe detected: Dislike.
+      Animated.timing(position, {
+        toValue: { x: -width - 100, y: 0 }, // Moves the card off-screen to the left.
+        duration: 300,
+        useNativeDriver: false,
+      }).start(() => {
+        console.log('Disliked:', profiles[currentIndex]?.name); 
+        setSwipeFeedback({ text: 'Dislike', color: '#FF0000'}); 
+        handleNextCard(); // Moves to the next card.
+      });
+    } else {
+      // Swipe was insufficient: Reset the card to its original position.
+      Animated.spring(position, {
+        toValue: { x: 0, y: 0 },
+        useNativeDriver: false,
+      }).start(() => setSwipeFeedback({ text: '', color: 'transparent'}));
+    }
+  };
+
+  // Advances to the next card and resets the position animation.
+  const handleNextCard = () => {
+    position.setValue({ x: 0, y: 0 }); // Resets the card's position for the next profile.
+    setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, profiles.length - 1)); // Updates the current profile index.
+  };
 
   return (
     <LinearGradient colors={['#1E90FF', '#87CEFA']} style={styles.container}>
+      
+      <Animated.Text 
+        style={[
+          styles.feedbackText,
+          {
+            color: swipeFeedback.color,
+            opacity: position.x.interpolate({
+              inputRange: [-width/2, -50, 0, 50, width/2],
+              outputRange: [1, 1, 0, 1, 1],
+              extrapolate: 'clamp',
+            })
+          }
+        ]}
+      >
+        {swipeFeedback.text}
+      </Animated.Text>
       {profiles.length > 0 && profiles.map((profile, index) => {
-        if (index < currentIndex) return null;
+        if (index < currentIndex) return null; // Skips already swiped profiles.
 
-        const isCurrent = index === currentIndex;
-        const cardStyle = isCurrent
-          ? [
-              styles.card,
-              {
-                transform: [
-                  { translateX: position.x },
-                  { translateY: position.y },
-                  { rotate: rotate },
-                ],
-              },
-            ]
-          : [styles.card, { opacity: 0 }];
+        const isCurrent = index === currentIndex; // Checks if the profile is the currently active card.
 
         return (
           <Animated.View
             key={profile.id}
-            style={cardStyle}
-            {...(isCurrent ? panResponder.panHandlers : {})}
+            style={[
+              styles.card,
+              {
+                transform: [
+                  { translateX: position.x }, // Applies horizontal movement.
+                  { translateY: position.y }, // Applies vertical movement.
+                  {
+                    rotate: position.x.interpolate({
+                      inputRange: [-width / 2, 0, width / 2],
+                      outputRange: ['-10deg', '0deg', '10deg'], // Rotates the card based on swipe direction.
+                      extrapolate: 'clamp',
+                    }),
+                  },
+                ],
+              },
+            ]}
+            onTouchStart={handleTouchStart} // Begins tracking the touch.
+            onTouchMove={handleTouchMove} // Updates the card's position.
+            onTouchEnd={handleTouchEnd} // Determines swipe outcome or resets the position.
           >
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
-              <Image source={{ uri: profile.mainImage }} style={styles.image} />
-              <Text style={styles.name}>{profile.nickName}</Text>
-              <Text style={styles.bio}>{profile.bio}</Text>
-
-              {profile.extraImages && profile.extraImages.map((image, idx) => (
-                <View key={idx} style={styles.extraImageContainer}>
-                  <Image source={{ uri: image }} style={styles.extraImage} />
-                  <Text style={styles.caption}>{profile.captions[idx]}</Text>
-                </View>
-              ))}
-            </ScrollView>
-
-            {isCurrent && (
-              <>
-                <Animated.View style={[styles.likeBadge, { opacity: likeOpacity }]}>
-                  <Text style={styles.likeText}>LIKE</Text>
-                </Animated.View>
-                <Animated.View style={[styles.dislikeBadge, { opacity: dislikeOpacity }]}>
-                  <Text style={styles.dislikeText}>NOPE</Text>
-                </Animated.View>
-              </>
-            )}
+            <Image source={{ uri: profile.mainImage }} style={styles.image} />
+            <Text style={styles.name}>{profile.nickName}</Text>
+            <Text style={styles.bio}>{profile.bio}</Text>
           </Animated.View>
+          
         );
       })}
-
-      {profiles.length === 0 && currentIndex >= profiles.length && (
-        <View style={styles.noProfilesContainer}>
-          <Image source={require('../../assets/ice_cube_logo.png')} style={styles.noProfilesLogo} />
-          <Text style={styles.noProfilesText}>No more profiles to show right now. Please check back later!</Text>
-        </View>
+      {currentIndex >= profiles.length && (
+        <Text style={styles.noProfilesText}>No more profiles to show!</Text> // Message when no profiles are left.
       )}
-
       <View style={styles.bottomNav}>
         <TouchableOpacity onPress={() => navigation.navigate('MyProfile')} style={styles.navButton}>
           <Ionicons name="person-circle-outline" size={24} color="#FFFFFF" />
@@ -173,32 +181,38 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  feedbackText: {
+    position: 'absolute',
+    top: '40%',
+    fontSize: 42,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    zIndex: 999,
+    width: '100%',
+
+    transform: [{ rotate: '-30deg' }],
+  },
   card: {
     width: width * 0.9,
     height: height * 0.7,
-    borderRadius: 20,
-    backgroundColor: '#fff',
     position: 'absolute',
+    borderRadius: 10,
+    backgroundColor: '#fff',
     shadowColor: '#000',
     shadowOpacity: 0.2,
     shadowRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  scrollContainer: {
-    alignItems: 'center',
-    paddingVertical: 20,
-  },
   image: {
     width: '100%',
-    height: 300,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    height: '70%',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
   name: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
     marginTop: 10,
   },
   bio: {
@@ -207,66 +221,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 10,
   },
-  extraImageContainer: {
-    marginVertical: 10,
-    alignItems: 'center',
-  },
-  extraImage: {
-    width: '100%',
-    height: 200,
-    borderRadius: 10,
-  },
-  caption: {
-    fontSize: 14,
-    color: '#555',
-    marginTop: 5,
-    textAlign: 'center',
-  },
-  likeBadge: {
-    position: 'absolute',
-    top: 50,
-    left: 40,
-    zIndex: 1,
-    borderWidth: 2,
-    borderColor: '#4CAF50',
-    padding: 10,
-    borderRadius: 5,
-  },
-  dislikeBadge: {
-    position: 'absolute',
-    top: 50,
-    right: 40,
-    zIndex: 1,
-    borderWidth: 2,
-    borderColor: '#F44336',
-    padding: 10,
-    borderRadius: 5,
-  },
-  likeText: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#4CAF50',
-  },
-  dislikeText: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#F44336',
-  },
-  noProfilesContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: -height * 0.15,
-  },
-  noProfilesLogo: {
-    width: 100,
-    height: 100,
-    marginBottom: 20,
-  },
   noProfilesText: {
     fontSize: 18,
-    color: '#FFFFFF',
-    textAlign: 'center',
-    paddingHorizontal: width * 0.1,
+    color: '#555',
   },
   bottomNav: {
     position: 'absolute',
