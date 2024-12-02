@@ -55,9 +55,9 @@ export default function SwipeScreen({ navigation }) {
     position.setValue({ x: dx, y: dy });
 
     if (dx > 50) {
-      setSwipeFeedback({text: 'Like', color: '#00FF00'});
+      setSwipeFeedback({text: 'LIKE', color: '#00FF00'});
     } else if (dx < -50) {
-      setSwipeFeedback({text: 'Dislike', color: '#FF0000'});
+      setSwipeFeedback({text: 'NOPE', color: 'red'});
     } else {
       setSwipeFeedback({text: '', color: 'transparent'});
     }
@@ -87,7 +87,7 @@ export default function SwipeScreen({ navigation }) {
         useNativeDriver: false,
       }).start(() => {
         console.log('Disliked:', profiles[currentIndex]?.name); 
-        setSwipeFeedback({ text: 'Dislike', color: '#FF0000'}); 
+        setSwipeFeedback({ text: 'NOPE', color: '#FF0000'}); 
         handleNextCard(); // Moves to the next card.
       });
     } else {
@@ -109,10 +109,13 @@ export default function SwipeScreen({ navigation }) {
     <LinearGradient colors={['#1E90FF', '#87CEFA']} style={styles.container}>
       
       <Animated.Text 
-        style={[
-          styles.feedbackText,
+        style={[styles.feedbackText,
           {
-            color: swipeFeedback.color,
+            color: swipeFeedback.text === 'LIKE' || swipeFeedback.text === 'Like' 
+            ? '#00FF00' 
+            : swipeFeedback.text === 'NOPE' || swipeFeedback.text === 'Dislike'
+            ? 'red'
+            : 'transparent',
             opacity: position.x.interpolate({
               inputRange: [-width/2, -50, 0, 50, width/2],
               outputRange: [1, 1, 0, 1, 1],
@@ -126,7 +129,7 @@ export default function SwipeScreen({ navigation }) {
       {profiles.length > 0 && profiles.map((profile, index) => {
         if (index < currentIndex) return null; // Skips already swiped profiles.
 
-        const isCurrent = index === currentIndex; // Checks if the profile is the currently active card.
+        //const isCurrent = index === currentIndex; // Checks if the profile is the currently active card.
 
         return (
           <Animated.View
@@ -187,12 +190,15 @@ const styles = StyleSheet.create({
     fontSize: 42,
     fontWeight: 'bold',
     textAlign: 'center',
-    zIndex: 999,
+    zIndex: 100,
     width: '100%',
-
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 10,
     transform: [{ rotate: '-30deg' }],
   },
   card: {
+    zIndex: 999,
     width: width * 0.9,
     height: height * 0.7,
     position: 'absolute',
