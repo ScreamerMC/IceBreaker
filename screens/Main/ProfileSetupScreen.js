@@ -1,24 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, Alert, Image, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+  ScrollView,
+  Alert,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import { Button } from 'react-native-elements';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as ImagePicker from 'expo-image-picker';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'; 
 import { db, storage, auth } from '../../firebaseConfig';
-import { doc, setDoc, collection } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 
 export default function ProfileSetupScreen({ navigation }) {
+  // State variables
   const [mainImage, setMainImage] = useState(null);
   const [extraImages, setExtraImages] = useState([null, null, null, null, null]);
   const [captions, setCaptions] = useState(['', '', '', '', '']);
   const [gender, setGender] = useState('');
   const [preference, setPreference] = useState('');
   const [bio, setBio] = useState('');
-  const [nickName, setNickname] = useState('')
-  const [loading, setLoading]  = useState(false);
+  const [nickName, setNickName] = useState('');
+  const [loading, setLoading] = useState(false);
 
+  // Function to pick an image from the library
   const handleImagePick = async (index = -1) => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
     if (!permissionResult.granted) {
       Alert.alert("Permission required", "Permission to access the media library is required to upload images.");
       return;
@@ -43,24 +57,20 @@ export default function ProfileSetupScreen({ navigation }) {
     }
   };
 
-
+  // Function to upload an image to Firebase Storage
   const uploadImageToFirebase = async (uri, filename) => {
     const response = await fetch(uri);
     const blob = await response.blob();
-
-    // Use `ref` and `uploadBytes` with the modular SDK
     const imageRef = ref(storage, `profileImages/${auth.currentUser.uid}/${filename}`);
-    console.log('Uploading to:', imageRef.fullPath);
     await uploadBytes(imageRef, blob);
-
-
     return await getDownloadURL(imageRef); 
   };
 
-  
+  // Function to save the profile
   const handleSaveProfile = async () => {
     if (loading) return;
 
+    // Validation checks
     if (!mainImage) {
       Alert.alert("Profile Incomplete", "Please upload a main profile picture.");
       return;
@@ -69,19 +79,20 @@ export default function ProfileSetupScreen({ navigation }) {
       Alert.alert("Profile Incomplete", "Please select your gender and who you're interested in.");
       return;
     }
-    if (!nickName){
-      Alert.alert('Please enter a nickname');
+    if (!nickName) {
+      Alert.alert("Profile Incomplete", "Please enter a nickname.");
       return;
     }
 
     try {
       setLoading(true);
-      // Upload images to Firebase Storage and get URLs
+
+      // Upload images and get their URLs
       const mainImageUrl = await uploadImageToFirebase(mainImage, 'mainImage.jpg');
       const extraImagesUrls = await Promise.all(
-        extraImages.map((image, index) => {
-          return image ? uploadImageToFirebase(image, `extraImage_${index}.jpg`) : null;
-        })
+        extraImages.map((image, index) => 
+          image ? uploadImageToFirebase(image, `extraImage_${index}.jpg`) : null
+        )
       );
 
       // Save profile data to Firestore
@@ -102,13 +113,16 @@ export default function ProfileSetupScreen({ navigation }) {
       console.error("Error saving profile:", error);
       Alert.alert("Error", "Failed to save profile. Please try again.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
   return (
     <LinearGradient colors={['#1E90FF', '#87CEFA']} style={styles.container}>
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.keyboardAvoidingView}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.keyboardAvoidingView}
+      >
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.contentContainer}>
             {/* Main Profile Image */}
@@ -121,7 +135,7 @@ export default function ProfileSetupScreen({ navigation }) {
               )}
             </TouchableOpacity>
 
-            {/* Extra Images */}
+            {/* Additional Pictures */}
             <Text style={styles.label}>Additional Pictures (Optional)</Text>
             <View style={styles.extraImagesContainer}>
               {extraImages.map((image, index) => (
@@ -137,7 +151,7 @@ export default function ProfileSetupScreen({ navigation }) {
 
             {/* Captions for Extra Images */}
             {extraImages.map((image, index) =>
-              image ? (
+              image && (
                 <TextInput
                   key={`caption-${index}`}
                   placeholder={`Caption for Picture ${index + 1} (Optional)`}
@@ -150,24 +164,32 @@ export default function ProfileSetupScreen({ navigation }) {
                     setCaptions(updatedCaptions);
                   }}
                 />
-              ) : null
+              )
             )}
-            {/* NICKNAME */}
-            <Text style ={styles.label}> Set a Nickname!</Text>
+
+            {/* Nickname Input */}
+            <Text style={styles.label}>Set a Nickname</Text>
             <TextInput
-            placeholder="Enter your nickName"
-            placeholderTextColor="#aaa"
-            style={styles.nicknameInput}
-            value={nickName}
-            onChangeText={setNickname}
+              placeholder="Enter your nickname"
+              placeholderTextColor="#aaa"
+              style={styles.nicknameInput}
+              value={nickName}
+              onChangeText={setNickName}
             />
+
             {/* Gender Selection */}
             <Text style={styles.label}>I am a</Text>
             <View style={styles.selectionContainer}>
-              <TouchableOpacity onPress={() => setGender('Male')} style={[styles.optionButton, gender === 'Male' && styles.selectedButton]}>
+              <TouchableOpacity
+                onPress={() => setGender('Male')}
+                style={[styles.optionButton, gender === 'Male' && styles.selectedButton]}
+              >
                 <Text style={styles.optionText}>Male</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => setGender('Female')} style={[styles.optionButton, gender === 'Female' && styles.selectedButton]}>
+              <TouchableOpacity
+                onPress={() => setGender('Female')}
+                style={[styles.optionButton, gender === 'Female' && styles.selectedButton]}
+              >
                 <Text style={styles.optionText}>Female</Text>
               </TouchableOpacity>
             </View>
@@ -175,10 +197,16 @@ export default function ProfileSetupScreen({ navigation }) {
             {/* Preference Selection */}
             <Text style={styles.label}>Looking for</Text>
             <View style={styles.selectionContainer}>
-              <TouchableOpacity onPress={() => setPreference('Male')} style={[styles.optionButton, preference === 'Male' && styles.selectedButton]}>
+              <TouchableOpacity
+                onPress={() => setPreference('Male')}
+                style={[styles.optionButton, preference === 'Male' && styles.selectedButton]}
+              >
                 <Text style={styles.optionText}>Male</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => setPreference('Female')} style={[styles.optionButton, preference === 'Female' && styles.selectedButton]}>
+              <TouchableOpacity
+                onPress={() => setPreference('Female')}
+                style={[styles.optionButton, preference === 'Female' && styles.selectedButton]}
+              >
                 <Text style={styles.optionText}>Female</Text>
               </TouchableOpacity>
             </View>
@@ -193,12 +221,11 @@ export default function ProfileSetupScreen({ navigation }) {
               value={bio}
               onChangeText={setBio}
               returnKeyType="done"
-              onSubmitEditing={() => Keyboard.dismiss()}
             />
 
-            {/* Save Button */}
+            {/* Save Profile Button */}
             <Button
-              title={ loading ? "Saving..." : "Save Profile"}
+              title={loading ? "Saving..." : "Save Profile"}
               buttonStyle={[styles.saveButton, loading && styles.saveButtonDisabled]}
               titleStyle={styles.saveButtonTitle}
               onPress={handleSaveProfile}
@@ -211,29 +238,13 @@ export default function ProfileSetupScreen({ navigation }) {
   );
 }
 
-
-
+// Styles
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  keyboardAvoidingView: {
-    flex: 1,
-  },
-  scrollContainer: {
-    paddingVertical: 40,
-    alignItems: 'center',
-  },
-  contentContainer: {
-    width: '90%',
-    alignItems: 'center',
-  },
-  label: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    marginVertical: 10,
-  },
+  container: { flex: 1 },
+  keyboardAvoidingView: { flex: 1 },
+  scrollContainer: { paddingVertical: 40, alignItems: 'center' },
+  contentContainer: { width: '90%', alignItems: 'center' },
+  label: { fontSize: 18, fontWeight: 'bold', color: '#FFFFFF', marginVertical: 10 },
   imageUpload: {
     width: 150,
     height: 150,
@@ -243,20 +254,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 20,
   },
-  imagePlaceholder: {
-    color: '#aaa',
-    fontSize: 16,
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 75,
-  },
-  extraImagesContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
+  image: { width: '100%', height: '100%', borderRadius: 75 },
+  imagePlaceholder: { color: '#aaa', fontSize: 16 },
+  extraImagesContainer: { flexDirection: 'row', justifyContent: 'space-between', width: '100%' },
   extraImageUpload: {
     width: 60,
     height: 60,
@@ -264,71 +264,48 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 5,
   },
-  extraImage: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 10,
-  },
+  extraImage: { width: '100%', height: '100%', borderRadius: 10 },
   captionInput: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    padding: 10,
-    color: '#333',
     width: '100%',
-    marginBottom: 10,
-  },
-  selectionContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    marginBottom: 20,
-  },
-  optionButton: {
-    padding: 10,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#FFFFFF',
-    backgroundColor: '#87CEFA',
-  },
-  selectedButton: {
-    backgroundColor: '#005bb5',
-  },
-  optionText: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#aaa',
+    paddingVertical: 5,
+    marginVertical: 5,
     color: '#FFFFFF',
-    fontWeight: 'bold',
-  },
-  bioInput: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    padding: 10,
-    color: '#333',
-    width: '100%',
-    height: 100,
-    textAlignVertical: 'top',
-    marginBottom: 20,
-  },
-  saveButton: {
-    backgroundColor: '#005bb5',
-    borderRadius: 10,
-    paddingVertical: 12,
-    width: '100%',
-  },
-  saveButtonDisabled: {
-    backgroundColor:'#aaa'
-  },
-  saveButtonTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
   },
   nicknameInput: {
-    borderBottomWidth: 1, 
-    borderBottomColor: '#white',
+    width: '100%',
+    borderBottomWidth: 1,
+    borderBottomColor: '#aaa',
     paddingVertical: 5,
-    fontSize: 16, 
-    color: '#white',
-    marginBottom: 20, 
-    width: '80%',
-  }
+    marginBottom: 20,
+    color: '#FFFFFF',
+  },
+  selectionContainer: { flexDirection: 'row', justifyContent: 'space-between', width: '100%' },
+  optionButton: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 10,
+    marginHorizontal: 5,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
+  },
+  selectedButton: { backgroundColor: '#FFFFFF' },
+  optionText: { color: '#FFFFFF' },
+  bioInput: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#aaa',
+    borderRadius: 10,
+    padding: 10,
+    color: '#FFFFFF',
+    textAlignVertical: 'top',
+    height: 100,
+    marginBottom: 20,
+  },
+  saveButton: { backgroundColor: '#FFFFFF', paddingVertical: 15, borderRadius: 10, width: '100%' },
+  saveButtonDisabled: { backgroundColor: '#ccc' },
+  saveButtonTitle: { fontSize: 18, fontWeight: 'bold', color: '#1E90FF' },
 });
