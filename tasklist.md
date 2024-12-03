@@ -6,6 +6,7 @@
 - [ ] Voice Note Logic (mp4) - Storage - gone after 1 week so we don't store them. 
 
 ## Profile Management
+- [ ] Make sure to not fetch profiles that have already been swiped on. or show them again on refresh?
 - [ ] Edit Profile
 - [ ] Make Save Profile Button only work every 10 seconds
 

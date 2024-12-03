@@ -184,13 +184,19 @@ export default function ProfileSetupScreen({ navigation }) {
                 onPress={() => setGender('Male')}
                 style={[styles.optionButton, gender === 'Male' && styles.selectedButton]}
               >
-                <Text style={styles.optionText}>Male</Text>
+                <Text style={[
+                  styles.optionText,
+                  gender === 'Male' && styles.selectedOptionText
+                ]}>Male</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => setGender('Female')}
                 style={[styles.optionButton, gender === 'Female' && styles.selectedButton]}
               >
-                <Text style={styles.optionText}>Female</Text>
+                <Text style={[
+                  styles.optionText,
+                  gender === 'Female' && styles.selectedOptionText
+                ]}>Female</Text>
               </TouchableOpacity>
             </View>
 
@@ -201,13 +207,19 @@ export default function ProfileSetupScreen({ navigation }) {
                 onPress={() => setPreference('Male')}
                 style={[styles.optionButton, preference === 'Male' && styles.selectedButton]}
               >
-                <Text style={styles.optionText}>Male</Text>
+                <Text style={[
+                  styles.optionText,
+                  preference === 'Male' && styles.selectedOptionText
+                ]}>Male</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => setPreference('Female')}
                 style={[styles.optionButton, preference === 'Female' && styles.selectedButton]}
               >
-                <Text style={styles.optionText}>Female</Text>
+                <Text style={[
+                  styles.optionText,
+                  preference === 'Female' && styles.selectedOptionText
+                ]}>Female</Text>
               </TouchableOpacity>
             </View>
 
@@ -292,8 +304,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#FFFFFF',
   },
-  selectedButton: { backgroundColor: '#FFFFFF' },
-  optionText: { color: '#FFFFFF' },
+  selectedButton: {
+    backgroundColor: '#FFFFFF',
+  },
+  optionText: {
+    color: '#FFFFFF',
+  },
+  selectedOptionText: {
+    color: '#1E90FF',
+  },
   bioInput: {
     width: '100%',
     borderWidth: 1,

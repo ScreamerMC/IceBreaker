@@ -87,7 +87,7 @@ export default function SwipeScreen({ navigation }) {
     const currentProfile = profiles[currentIndex];
     const currentUserId = auth.currentUser.uid;
 
-    if (dx > 100) {
+    if (dx > 50) {
       // Right swipe detected: Like.
       Animated.timing(position, {
         toValue: { x: width + 100, y: 0 }, // Moves the card off-screen to the right.
@@ -129,7 +129,7 @@ export default function SwipeScreen({ navigation }) {
         console.error('Error liking profile:', error);
       }
       });
-    } else if (dx < -100) {
+    } else if (dx < -50) {
       // Left swipe detected: Dislike.
       Animated.timing(position, {
         toValue: { x: -width - 100, y: 0 }, // Moves the card off-screen to the left.
@@ -160,7 +160,12 @@ export default function SwipeScreen({ navigation }) {
   // Advances to the next card and resets the position animation.
   const handleNextCard = () => {
     position.setValue({ x: 0, y: 0 }); // Resets the card's position for the next profile.
-    setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, profiles.length - 1)); // Updates the current profile index.
+    setCurrentIndex(prevIndex => {
+      if (prevIndex < profiles.length - 1) {
+        return prevIndex + 1;
+      }
+      return prevIndex ;
+    }); // Updates the current profile index.
   };
 
   
@@ -185,14 +190,9 @@ export default function SwipeScreen({ navigation }) {
       >
         {swipeFeedback.text}
       </Animated.Text>
-      {profiles.length > 0 && profiles.map((profile, index) => {
-        if (index < currentIndex) return null; // Skips already swiped profiles.
-
-        //const isCurrent = index === currentIndex; // Checks if the profile is the currently active card.
-
-        return (
+      {profiles.length > 0 && currentIndex < profiles.length ? (
           <Animated.View
-            key={profile.id}
+            key={profiles[currentIndex].id}
             style={[
               styles.card,
               {
@@ -213,14 +213,12 @@ export default function SwipeScreen({ navigation }) {
             onTouchMove={handleTouchMove} // Updates the card's position.
             onTouchEnd={handleTouchEnd} // Determines swipe outcome or resets the position.
           >
-            <Image source={{ uri: profile.mainImage }} style={styles.image} />
-            <Text style={styles.name}>{profile.nickName}</Text>
-            <Text style={styles.bio}>{profile.bio}</Text>
+            <Image source={{ uri: profiles[currentIndex].mainImage }} style={styles.image} />
+            <Text style={styles.name}>{profiles[currentIndex].nickName}</Text>
+            <Text style={styles.bio}>{profiles[currentIndex].bio}</Text>
           </Animated.View>
           
-        );
-      })}
-      {currentIndex >= profiles.length && (
+           ) : (
         <Text style={styles.noProfilesText}>No more profiles to show!</Text> // Message when no profiles are left.
       )}
       <View style={styles.bottomNav}>
