@@ -123,7 +123,6 @@ export default function SwipeScreen({ navigation }) {
             });
             alert('Match!');
           }
-        console.log('Liked:', profiles[currentIndex]?.name);
         setSwipeFeedback({ text: 'LIKE', color: '#00FF00' });
         handleNextCard(); // Moves to the next card.
       } catch (error) {
@@ -234,6 +233,7 @@ export default function SwipeScreen({ navigation }) {
           <Text style={styles.navButtonText}>Chats</Text>
         </TouchableOpacity>
       </View>
+      
     </LinearGradient>
   );
 }
