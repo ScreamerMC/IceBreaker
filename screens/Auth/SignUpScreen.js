@@ -10,21 +10,46 @@ export default function SignUpScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [isCooldown, setIsCooldown] = useState(false); // Cooldown flag
 
   const handleSignUp = async () => {
-    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+    if (isCooldown) {
+      Alert.alert("Cooldown Active", "Please wait a moment before trying again.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
       Alert.alert("Invalid Email", "Please enter a valid email address.");
       return;
     }
-    if (!password || password.length < 6) {
-      Alert.alert("Weak Password", "Password must be at least 6 characters.");
+
+    if (!password || password.length < 8) {
+      Alert.alert("Weak Password", "Password must be at least 8 characters long.");
       return;
     }
+
+    if (
+      !/[A-Z]/.test(password) || 
+      !/[a-z]/.test(password) || 
+      !/[0-9]/.test(password) || 
+      !/[!@#$%^&*]/.test(password)
+    ) {
+      Alert.alert(
+        "Weak Password",
+        "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character."
+      );
+      return;
+    }
+
     if (password !== confirmPassword) {
       Alert.alert("Passwords Do Not Match", "Please ensure the passwords match.");
       return;
     }
-    
+
+    setIsCooldown(true); // Activate cooldown
+    setTimeout(() => setIsCooldown(false), 5000); // Cooldown duration (5 seconds)
+
     try {
       await signUp(email, password);
       navigation.replace('ProfileSetup');
@@ -32,7 +57,6 @@ export default function SignUpScreen({ navigation }) {
       Alert.alert('Sign Up Failed', error.message);
     }
   };
-  
 
   return (
     <LinearGradient colors={['#1E90FF', '#87CEFA']} style={styles.container}>
@@ -55,6 +79,8 @@ export default function SignUpScreen({ navigation }) {
         inputContainerStyle={styles.inputContainer}
         value={email}
         onChangeText={setEmail}
+        autoCapitalize="none"
+        keyboardType="email-address"
       />
       <Input
         placeholder="Password"
@@ -64,22 +90,25 @@ export default function SignUpScreen({ navigation }) {
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        autoCapitalize="none"
       />
-          <Input
-      placeholder="Confirm Password"
-      placeholderTextColor="#aaa"
-      inputStyle={styles.inputText}
-      inputContainerStyle={styles.inputContainer}
-      value={confirmPassword}
-      onChangeText={setConfirmPassword}
-      secureTextEntry
-    />
+      <Input
+        placeholder="Confirm Password"
+        placeholderTextColor="#aaa"
+        inputStyle={styles.inputText}
+        inputContainerStyle={styles.inputContainer}
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
+        secureTextEntry
+        autoCapitalize="none"
+      />
 
       <Button
         title="Sign Up"
         buttonStyle={styles.button}
         titleStyle={styles.buttonTitle}
         onPress={handleSignUp}
+        disabled={isCooldown}
       />
 
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
@@ -129,7 +158,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   button: {
-    backgroundColor: '#005bb5',
+    backgroundColor: isCooldown ? '#888' : '#005bb5',
     borderRadius: 10,
     paddingVertical: 12,
     marginVertical: 15,
