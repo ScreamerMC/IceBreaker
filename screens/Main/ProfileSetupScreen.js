@@ -171,7 +171,7 @@ export default function ProfileSetupScreen({ navigation }) {
             <Text style={styles.label}>Set a Nickname</Text>
             <TextInput
               placeholder="Enter your nickname"
-              placeholderTextColor="#aaa"
+              placeholderTextColor="white"
               style={styles.nicknameInput}
               value={nickName}
               onChangeText={setNickName}
@@ -227,7 +227,7 @@ export default function ProfileSetupScreen({ navigation }) {
             <Text style={styles.label}>Bio</Text>
             <TextInput
               placeholder="Tell us a bit about yourself..."
-              placeholderTextColor="#aaa"
+              placeholderTextColor="white"
               multiline
               style={styles.bioInput}
               value={bio}
@@ -242,9 +242,10 @@ export default function ProfileSetupScreen({ navigation }) {
               titleStyle={styles.saveButtonTitle}
               onPress={handleSaveProfile}
               disabled={loading}
+              containerStyle={styles.saveButtonContainer}
             />
           </View>
-        </ScrollView>
+        </ScrollView> 
       </KeyboardAvoidingView>
     </LinearGradient>
   );
@@ -281,7 +282,7 @@ const styles = StyleSheet.create({
   captionInput: {
     width: '100%',
     borderBottomWidth: 1,
-    borderBottomColor: '#aaa',
+    borderBottomColor: 'white',
     paddingVertical: 5,
     marginVertical: 5,
     color: '#FFFFFF',
@@ -292,7 +293,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#aaa',
     paddingVertical: 5,
     marginBottom: 20,
-    color: '#FFFFFF',
+    color: 'white',
   },
   selectionContainer: { flexDirection: 'row', justifyContent: 'space-between', width: '100%' },
   optionButton: {
@@ -316,7 +317,7 @@ const styles = StyleSheet.create({
   bioInput: {
     width: '100%',
     borderWidth: 1,
-    borderColor: '#aaa',
+    borderColor: 'white',
     borderRadius: 10,
     padding: 10,
     color: '#FFFFFF',
@@ -326,5 +327,6 @@ const styles = StyleSheet.create({
   },
   saveButton: { backgroundColor: '#FFFFFF', paddingVertical: 15, borderRadius: 10, width: '100%' },
   saveButtonDisabled: { backgroundColor: '#ccc' },
-  saveButtonTitle: { fontSize: 18, fontWeight: 'bold', color: '#1E90FF' },
+  saveButtonTitle: { fontSize: 18, fontWeight: 'bold', color: '#1E90FF', textAlign: 'center' },
+  saveButtonContainer: { width: '100%', alignItems: 'center', justifyContent: 'center' },
 });

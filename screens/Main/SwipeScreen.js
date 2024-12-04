@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Dimensions, Image, Animated, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Image, Animated, TouchableOpacity, ScrollView } from 'react-native';
 import { db, auth } from '../../firebaseConfig';
 import { collection, query, where, getDocs, getDoc, doc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -51,10 +51,11 @@ export default function SwipeScreen({ navigation }) {
   const handleTouchMove = (event) => {
     const { pageX, pageY } = event.nativeEvent; // Captures the current touch coordinates.
     const dx = pageX - touchStartRef.current.x; // Horizontal distance moved.
-    const dy = pageY - touchStartRef.current.y; // Vertical distance moved.
 
-    // Updates the position of the card based on touch movement.
-    position.setValue({ x: dx, y: dy });
+
+  requestAnimationFrame(() => {
+    position.setValue({ x: dx, y: 0 });
+  });
 
     if (dx > 50) {
       setSwipeFeedback({text: 'LIKE', color: '#00FF00'});
@@ -197,29 +198,79 @@ export default function SwipeScreen({ navigation }) {
               styles.card,
               {
                 transform: [
-                  { translateX: position.x }, // Applies horizontal movement.
-                  { translateY: position.y }, // Applies vertical movement.
+                  { translateX: position.x },
+                  { translateY: position.y },
                   {
                     rotate: position.x.interpolate({
                       inputRange: [-width / 2, 0, width / 2],
-                      outputRange: ['-10deg', '0deg', '10deg'], // Rotates the card based on swipe direction.
+                      outputRange: ['-10deg', '0deg', '10deg'],
                       extrapolate: 'clamp',
                     }),
                   },
                 ],
               },
             ]}
-            onTouchStart={handleTouchStart} // Begins tracking the touch.
-            onTouchMove={handleTouchMove} // Updates the card's position.
-            onTouchEnd={handleTouchEnd} // Determines swipe outcome or resets the position.
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
           >
-            <Image source={{ uri: profiles[currentIndex].mainImage }} style={styles.image} />
-            <Text style={styles.name}>{profiles[currentIndex].nickName}</Text>
-            <Text style={styles.bio}>{profiles[currentIndex].bio}</Text>
+            <ScrollView 
+              style={styles.scrollView}
+              showsVerticalScrollIndicator={false}
+              bounces={false}
+            >
+              {/* Main Image Section */}
+              <View style={styles.mainImageContainer}>
+                <Image 
+                  source={{ uri: profiles[currentIndex].mainImage }} 
+                  style={styles.mainImage} 
+                />
+                <LinearGradient
+                  colors={['transparent', 'rgba(0,0,0,0.8)']}
+                  style={styles.gradientOverlay}
+                >
+                  <Text style={styles.name}>{profiles[currentIndex].nickName}</Text>
+                  <Text style={styles.bio}>{profiles[currentIndex].bio}</Text>
+                </LinearGradient>
+              </View>
+
+              {/* Extra Images Section */}
+              {profiles[currentIndex].extraImages?.map((imageUrl, index) => (
+                imageUrl && (
+                  <View key={index} style={styles.extraImageContainer}>
+                    <Image 
+                      source={{ uri: imageUrl }} 
+                      style={styles.extraImage} 
+                    />
+                    {profiles[currentIndex].captions?.[index] && (
+                      <View style={styles.captionContainer}>
+                        <Text style={styles.caption}>
+                          {profiles[currentIndex].captions[index]}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                )
+              ))}
+            </ScrollView>
           </Animated.View>
           
            ) : (
-        <Text style={styles.noProfilesText}>No more profiles to show!</Text> // Message when no profiles are left.
+            <View style={styles.noProfilesContainer}>
+              <Image source={require('../../assets/icon.png')} style={styles.noProfilesIcon} />
+          <Text style={styles.noProfilesText}>No more profiles to show!</Text> 
+          <TouchableOpacity
+           style={styles.refreshButton} 
+           onPress={() => {
+            setCurrentIndex(0);
+            handleNextCard();
+            
+          }}
+          >
+          <Ionicons name="refresh" size={24} color="white" />
+          <Text style={styles.refreshButtonText}>Refresh</Text>
+          </TouchableOpacity>
+        </View> 
       )}
       <View style={styles.bottomNav}>
         <TouchableOpacity onPress={() => navigation.navigate('MyProfile')} style={styles.navButton}>
@@ -258,28 +309,44 @@ const styles = StyleSheet.create({
 
   },
   card: {
-    zIndex: 1,
     width: width * 0.9,
     height: height * 0.7,
     position: 'absolute',
-    borderRadius: 10,
+    borderRadius: 20,
     backgroundColor: '#fff',
     shadowColor: '#000',
     shadowOpacity: 0.2,
     shadowRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
+    elevation: 5,
+    overflow: 'hidden',
   },
-  image: {
+  scrollView: {
+    flex: 1,
+  },
+  mainImageContainer: {
+    position: 'relative',
+    height: height * 0.6,
+  },
+  mainImage: {
     width: '100%',
-    height: '70%',
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    height: '100%',
+  },
+  gradientOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 20,
+    paddingVertical: 30,
   },
   name: {
-    fontSize: 20,
+    fontSize: 28,
     fontWeight: 'bold',
-    marginTop: 10,
+    color: '#FFFFFF',
+    marginBottom: 8,
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 3,
   },
   bio: {
     fontSize: 16,
@@ -288,8 +355,11 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   noProfilesText: {
-    fontSize: 18,
-    color: '#555',
+    fontSize: 24,
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 10,
   },
   bottomNav: {
     position: 'absolute',
@@ -312,5 +382,27 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginLeft: 5,
+  },
+  refreshButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#005bb5',
+    padding: 10,
+    borderRadius: 20,
+  },
+  refreshButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 8,
+  },
+  noProfilesContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noProfilesIcon: {
+    width: 150,
+    height: 150,
   },
 });
