@@ -280,6 +280,140 @@
       "preference": "Male",
       "bio": "Fitness enthusiast. Yoga lover. Outdoor explorer 🏋️‍♀️.",
       "nickName": "FitnessFiend"
-    }
+    },
+    {
+      "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=BookWorm",
+    "extraImages": [
+      "https://api.dicebear.com/6.x/bottts/svg?seed=Library",
+      "https://api.dicebear.com/6.x/micah/svg?seed=ChapterOne"
+    ],
+    "captions": [
+      "Lost in a good book 📚",
+      "Turning pages, exploring worlds."
+    ],
+    "gender": "Female",
+    "preference": "Male",
+    "bio": "Book lover. History buff. Always curious 📖.",
+    "nickName": "BookWorm"
+  },
+  {
+    "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=FoodieGuy",
+    "extraImages": [
+      "https://api.dicebear.com/6.x/bottts/svg?seed=BurgerLover",
+      "https://api.dicebear.com/6.x/micah/svg?seed=SpicyTaco",
+      "https://api.dicebear.com/6.x/adventurer/svg?seed=SushiPlatter"
+    ],
+    "captions": [
+      "Trying the best burgers 🍔",
+      "Taco Tuesdays 🌮",
+      "Sushi Sundays 🍣"
+    ],
+    "gender": "Male",
+    "preference": "Female",
+    "bio": "Food critic in the making. Let's explore the best eats together! 🍴",
+      "nickName": "FoodieGuy"
+    },
+    {
+      "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=Fashionista",
+    "extraImages": [
+      "https://api.dicebear.com/6.x/bottts/svg?seed=StyleQueen",
+      "https://api.dicebear.com/6.x/micah/svg?seed=TrendyThreads",
+      "https://api.dicebear.com/6.x/adventurer/svg?seed=StreetStyle",
+      "https://api.dicebear.com/6.x/adventurer/svg?seed=ChicVibes"
+    ],
+    "captions": [
+      "Slaying street style 👗",
+      "Fashion is my art 🎨",
+      "Paris vibes in every outfit.",
+      "Accessorizing is key 🔑"
+    ],
+    "gender": "Female",
+    "preference": "Male",
+    "bio": "Fashion is my language. Shopping is my cardio 👜.",
+    "nickName": "Fashionista"
+    },
+   {
+    "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=TravelerTom",
+    "extraImages": [
+      "https://api.dicebear.com/6.x/bottts/svg?seed=GlobeTrotter",
+      "https://api.dicebear.com/6.x/micah/svg?seed=DesertNomad",
+      "https://api.dicebear.com/6.x/adventurer/svg?seed=JungleExplorer",
+      "https://api.dicebear.com/6.x/adventurer/svg?seed=SnowAdventures"
+    ],
+    "captions": [
+      "Backpacking through Europe 🎒",
+      "Desert sunsets are unmatched 🌅",
+      "Jungle vibes 🐒",
+      "Snowy mountains and hot cocoa ☕"
+    ],
+    "gender": "Male",
+    "preference": "Female",
+    "bio": "World traveler. Passport stamps are my trophies ✈️.",
+    "nickName": "TravelerTom"
+    },
+  {
+    "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=SportsFanatic",
+    "extraImages": [
+      "https://api.dicebear.com/6.x/bottts/svg?seed=StadiumVibes",
+      "https://api.dicebear.com/6.x/micah/svg?seed=BasketballCourt"
+    ],
+    "captions": [
+      "Catching games at the stadium ⚾",
+      "Nothing beats courtside seats 🏀"
+    ],
+    "gender": "Male",
+    "preference": "Female",
+    "bio": "Sports fanatic. Let's cheer together! 🏈.",
+    "nickName": "SportsFanatic"
+  },
+  {
+    "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=ArtistAnya",
+    "extraImages": [
+      "https://api.dicebear.com/6.x/bottts/svg?seed=GalleryWalk",
+      "https://api.dicebear.com/6.x/micah/svg?seed=WatercolorDreams",
+      "https://api.dicebear.com/6.x/adventurer/svg?seed=SculptorLife"
+    ],
+    "captions": [
+      "Creating abstract art 🎨",
+      "Gallery walks are my happy place.",
+      "Finding beauty in every stroke 🎭"
+    ],
+    "gender": "Female",
+    "preference": "Male",
+    "bio": "Painter. Sculptor. Dreamer. Creativity has no bounds.",
+    "nickName": "ArtistAnya"
+  },
+  {
+    "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=NatureNick",
+    "extraImages": [
+      "https://api.dicebear.com/6.x/bottts/svg?seed=ForestHike",
+      "https://api.dicebear.com/6.x/micah/svg?seed=CampingUnderStars"
+    ],
+    "captions": [
+      "Finding peace in the forest 🌲",
+      "Camping is my escape 🏕️"
+    ],
+    "gender": "Male",
+    "preference": "Female",
+    "bio": "Nature lover. Camping enthusiast. Outdoorsman.",
+    "nickName": "NatureNick"
+  },
+  {
+    "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=DancerDana",
+    "extraImages": [
+      "https://api.dicebear.com/6.x/bottts/svg?seed=StageLights",
+      "https://api.dicebear.com/6.x/micah/svg?seed=BallroomDreams",
+      "https://api.dicebear.com/6.x/adventurer/svg?seed=FreestyleVibes"
+    ],
+    "captions": [
+      "On stage under the lights 💃",
+      "Ballroom dancing is my passion.",
+      "Freestyle vibes on the dance floor."
+    ],
+    "gender": "Female",
+    "preference": "Male",
+    "bio": "Dance is the poetry of movement. Let's groove 🎵.",
+    "nickName": "DancerDana"
+  }
   ]
 }
