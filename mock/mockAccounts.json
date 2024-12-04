@@ -1,197 +1,285 @@
-[
+{
+  "accounts": [
     {
-      "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=TechDude",
-      "extraImages": [
-        "https://api.dicebear.com/6.x/bottts/svg?seed=Adventure",
-        "https://api.dicebear.com/6.x/micah/svg?seed=Skyline"
-      ],
-      "captions": [
-        "Loving life at the beach!",
-        "Hiking adventures 🏞️"
-      ],
-      "gender": "Male",
-      "preference": "Female",
-      "bio": "Adventure seeker. Tech enthusiast. Coffee lover ☕.",
-      "nickName": "TechDude"
-    },
-    {
-      "mainImage": "https://api.dicebear.com/6.x/micah/svg?seed=SunsetQueen",
-      "extraImages": [
-        "https://api.dicebear.com/6.x/adventurer/svg?seed=CityLife",
-        "https://api.dicebear.com/6.x/bottts/svg?seed=ChasingSunsets"
-      ],
-      "captions": [
-        "City skyline views 🌆",
-        "Chasing sunsets 🌅"
-      ],
+      "id": "mock1",
+      "nickName": "Sarah_Adventure",
       "gender": "Female",
       "preference": "Male",
-      "bio": "Bookworm, foodie, and aspiring artist 🎨.",
-      "nickName": "SunsetQueen"
-    },
-    {
-      "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=NomadSoul",
+      "mainImage": "https://api.dicebear.com/7.x/avataaars/jpg?seed=Sarah123",
+      "bio": "Adventure seeker 🏔️ | Coffee addict ☕ | Travel enthusiast ✈️",
       "extraImages": [
-        "https://api.dicebear.com/6.x/micah/svg?seed=Explorer",
-        "https://api.dicebear.com/6.x/bottts/svg?seed=Nature"
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=Sarah456",
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=Sarah789",
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=Sarah101"
       ],
       "captions": [
-        "Weekend vibes 🍹",
-        "Road trip memories 🚗"
-      ],
-      "gender": "Non-binary",
-      "preference": "All",
-      "bio": "Traveler, photographer, and music enthusiast 🎵.",
-      "nickName": "NomadSoul"
+        "Hiking in the Alps",
+        "Coffee shop vibes",
+        "Beach sunset in Bali"
+      ]
     },
     {
-      "mainImage": "https://api.dicebear.com/6.x/bottts/svg?seed=TeaLover",
-      "extraImages": [
-        "https://api.dicebear.com/6.x/adventurer/svg?seed=BookLover",
-        "https://api.dicebear.com/6.x/micah/svg?seed=WriterLife"
-      ],
-      "captions": [
-        "Winter wonderland ❄️",
-        "Coffee shop musings ☕"
-      ],
-      "gender": "Female",
-      "preference": "Female",
-      "bio": "Writer, dreamer, and tea aficionado 🍵.",
-      "nickName": "TeaLover"
-    },
-    {
-      "mainImage": "https://api.dicebear.com/6.x/micah/svg?seed=ChefCoder",
-      "extraImages": [
-        "https://api.dicebear.com/6.x/bottts/svg?seed=GamingLife",
-        "https://api.dicebear.com/6.x/adventurer/svg?seed=CodeMaster"
-      ],
-      "captions": [
-        "Game night champion 🎮",
-        "Nature's best 🌳"
-      ],
+      "id": "mock2",
+      "nickName": "Mike_Fitness",
       "gender": "Male",
+      "preference": "Female",
+      "mainImage": "https://api.dicebear.com/7.x/avataaars/jpg?seed=Mike123",
+      "bio": "Fitness coach 💪 | Dog dad 🐕 | Foodie 🍕",
+      "extraImages": [
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=Mike456",
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=Mike789"
+      ],
+      "captions": [
+        "Gym progress",
+        "With my dog Max"
+      ]
+    },
+    {
+      "id": "mock3",
+      "nickName": "Emma_Artist",
+      "gender": "Female",
       "preference": "Male",
-      "bio": "Gamer, programmer, and part-time chef 🍳.",
-      "nickName": "ChefCoder"
+      "mainImage": "https://api.dicebear.com/7.x/avataaars/jpg?seed=Emma123",
+      "bio": "Artist 🎨 | Plant mom 🌿 | Vintage lover 📷",
+      "extraImages": [
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=Emma456",
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=Emma789",
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=Emma101",
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=Emma202",
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=Emma303"
+      ],
+      "captions": [
+        "Latest artwork",
+        "My plant collection",
+        "Thrift store finds",
+        "Studio space",
+        "Art exhibition"
+      ]
+    },
+    {
+      "id": "mock4",
+      "nickName": "Alex_Tech",
+      "gender": "Male",
+      "preference": "Female",
+      "mainImage": "https://api.dicebear.com/7.x/avataaars/jpg?seed=Alex123",
+      "bio": "Software Engineer 💻 | Gamer 🎮 | Music producer 🎵",
+      "extraImages": [
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=Alex456"
+      ],
+      "captions": [
+        "My setup"
+      ]
+    },
+    {
+      "id": "mock5",
+      "nickName": "Lily_Chef",
+      "gender": "Female",
+      "preference": "Male",
+      "mainImage": "https://api.dicebear.com/7.x/avataaars/jpg?seed=Lily123",
+      "bio": "Professional chef 👩‍🍳 | Wine enthusiast 🍷 | World traveler 🌎",
+      "extraImages": [
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=Lily456",
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=Lily789",
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=Lily101"
+      ],
+      "captions": [
+        "Latest creation",
+        "Wine tasting in France",
+        "Cooking class"
+      ]
+    },
+    {
+      "id": "mock6",
+      "nickName": "James_Music",
+      "gender": "Male",
+      "preference": "Female",
+      "mainImage": "https://api.dicebear.com/7.x/avataaars/jpg?seed=James123",
+      "bio": "Guitarist 🎸 | Teacher 📚 | Coffee lover ☕",
+      "extraImages": [
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=James456",
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=James789",
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=James101",
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=James202"
+      ],
+      "captions": [
+        "Band practice",
+        "Teaching session",
+        "My guitar collection",
+        "Latest performance"
+      ]
+    },
+    {
+      "id": "mock7",
+      "nickName": "Sophie_Dance",
+      "gender": "Female",
+      "preference": "Male",
+      "mainImage": "https://api.dicebear.com/7.x/avataaars/jpg?seed=Sophie123",
+      "bio": "Professional dancer 💃 | Yoga instructor 🧘‍♀️ | Beach lover 🏖️",
+      "extraImages": [
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=Sophie456",
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=Sophie789"
+      ],
+      "captions": [
+        "Dance recital",
+        "Yoga session"
+      ]
+    },
+    {
+      "id": "mock8",
+      "nickName": "David_Photo",
+      "gender": "Male",
+      "preference": "Female",
+      "mainImage": "https://api.dicebear.com/7.x/avataaars/jpg?seed=David123",
+      "bio": "Photographer 📸 | Mountain biker 🚵‍♂️ | Pizza enthusiast 🍕",
+      "extraImages": [
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=David456",
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=David789",
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=David101",
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=David202",
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=David303"
+      ],
+      "captions": [
+        "Latest shoot",
+        "Mountain biking",
+        "Camera collection",
+        "Nature photography",
+        "Studio work"
+      ]
+    },
+    {
+      "id": "mock9",
+      "nickName": "Anna_Writer",
+      "gender": "Female",
+      "preference": "Male",
+      "mainImage": "https://api.dicebear.com/7.x/avataaars/jpg?seed=Anna123",
+      "bio": "Novelist ✍️ | Cat mom 🐱 | Tea lover 🫖",
+      "extraImages": [],
+      "captions": []
+    },
+    {
+      "id": "mock10",
+      "nickName": "Tom_Chef",
+      "gender": "Male",
+      "preference": "Female",
+      "mainImage": "https://api.dicebear.com/7.x/avataaars/jpg?seed=Tom123",
+      "bio": "Pastry chef 🧁 | Rock climber 🧗‍♂️ | Dog lover 🐕",
+      "extraImages": [
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=Tom456",
+        "https://api.dicebear.com/7.x/avataaars/jpg?seed=Tom789"
+      ],
+      "captions": [
+        "Latest dessert creation",
+        "Climbing session"
+      ]
     },
     {
       "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=StarGazer",
       "extraImages": [
-        "https://api.dicebear.com/6.x/micah/svg?seed=Cosmic",
-        "https://api.dicebear.com/6.x/bottts/svg?seed=GalacticExplorer"
+        "https://api.dicebear.com/6.x/bottts/svg?seed=Sunrise",
+        "https://api.dicebear.com/6.x/micah/svg?seed=MountainTrail",
+        "https://api.dicebear.com/6.x/adventurer/svg?seed=OceanWave"
       ],
       "captions": [
-        "Looking at the stars 🌌",
-        "Dreaming big 💫"
+        "Chasing the stars 🌌",
+        "Sunrise is my favorite time of day.",
+        "Living for the thrill of the outdoors 🌊"
       ],
-      "gender": "Non-binary",
-      "preference": "All",
-      "bio": "Astrology enthusiast and night owl 🦉.",
+      "gender": "Female",
+      "preference": "Male",
+      "bio": "Astronomy nerd. Nature enthusiast. Music lover 🎵.",
       "nickName": "StarGazer"
     },
     {
-      "mainImage": "https://api.dicebear.com/6.x/micah/svg?seed=OceanLover",
+      "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=CodeMaster",
       "extraImages": [
-        "https://api.dicebear.com/6.x/adventurer/svg?seed=SeaBreeze",
-        "https://api.dicebear.com/6.x/bottts/svg?seed=DivingDeep"
+        "https://api.dicebear.com/6.x/bottts/svg?seed=PixelArt",
+        "https://api.dicebear.com/6.x/micah/svg?seed=CyberSpace"
       ],
       "captions": [
-        "Life is better at the beach 🌊",
-        "Exploring underwater treasures 🐠"
+        "Pixel-perfect design 💻",
+        "Exploring the metaverse 🌌"
+      ],
+      "gender": "Male",
+      "preference": "Female",
+      "bio": "Code by day, gamer by night. Life's a game, play it well 🎮.",
+      "nickName": "CodeMaster"
+    },
+    {
+      "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=BeachBum",
+      "extraImages": [],
+      "captions": [],
+      "gender": "Female",
+      "preference": "Male",
+      "bio": "Beach lover. Sand between my toes, sun on my face 🌴.",
+      "nickName": "BeachBum"
+    },
+    {
+      "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=GuitarHero",
+      "extraImages": [
+        "https://api.dicebear.com/6.x/bottts/svg?seed=Concert",
+        "https://api.dicebear.com/6.x/micah/svg?seed=Rockstar",
+        "https://api.dicebear.com/6.x/adventurer/svg?seed=Vinyl",
+        "https://api.dicebear.com/6.x/adventurer/svg?seed=Melody",
+        "https://api.dicebear.com/6.x/adventurer/svg?seed=Harmony"
+      ],
+      "captions": [
+        "Rocking out at a concert 🎸",
+        "Jamming with friends 🎶",
+        "Exploring vinyl collections.",
+        "Every note tells a story.",
+        "Strumming my way through life."
+      ],
+      "gender": "Male",
+      "preference": "Female",
+      "bio": "Guitarist. Music is the soul of life 🎵.",
+      "nickName": "GuitarHero"
+    },
+    {
+      "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=ChefChic",
+      "extraImages": [
+        "https://api.dicebear.com/6.x/bottts/svg?seed=CulinaryArt",
+        "https://api.dicebear.com/6.x/micah/svg?seed=FineDining"
+      ],
+      "captions": [
+        "Culinary creations 🍳",
+        "Food is art 🎨"
       ],
       "gender": "Female",
       "preference": "Male",
-      "bio": "Marine biologist and environmental advocate 🌱.",
-      "nickName": "OceanLover"
+      "bio": "Chef. Food explorer. Flavor chaser 👩‍🍳.",
+      "nickName": "ChefChic"
     },
     {
-      "mainImage": "https://api.dicebear.com/6.x/bottts/svg?seed=CryptoKing",
+      "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=TechieTim",
       "extraImages": [
-        "https://api.dicebear.com/6.x/adventurer/svg?seed=TechInvestor",
-        "https://api.dicebear.com/6.x/micah/svg?seed=CodeWhiz"
+        "https://api.dicebear.com/6.x/bottts/svg?seed=CodeFlow",
+        "https://api.dicebear.com/6.x/micah/svg?seed=Startup",
+        "https://api.dicebear.com/6.x/adventurer/svg?seed=Innovate"
       ],
       "captions": [
-        "To the moon 🚀",
-        "HODL! 💎"
+        "Brainstorming startup ideas.",
+        "Innovation is my playground 🚀",
+        "Coding in flow state 🤖"
       ],
       "gender": "Male",
       "preference": "Female",
-      "bio": "Crypto enthusiast and blockchain developer 💻.",
-      "nickName": "CryptoKing"
+      "bio": "Tech geek. Entrepreneur. Coffee addict ☕.",
+      "nickName": "TechieTim"
     },
     {
-      "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=FitnessFan",
+      "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=FitnessFiend",
       "extraImages": [
-        "https://api.dicebear.com/6.x/micah/svg?seed=YogaPose",
-        "https://api.dicebear.com/6.x/bottts/svg?seed=GymRat"
+        "https://api.dicebear.com/6.x/bottts/svg?seed=YogaPose",
+        "https://api.dicebear.com/6.x/micah/svg?seed=TrailRun"
       ],
       "captions": [
-        "Stronger every day 💪",
-        "Mind over matter 🧘"
+        "Yoga keeps me grounded.",
+        "Trail running through life 🌲"
       ],
       "gender": "Female",
       "preference": "Male",
-      "bio": "Personal trainer and wellness coach 🏋️‍♀️.",
-      "nickName": "FitnessFan"
-    },
-    {
-      "mainImage": "https://api.dicebear.com/6.x/micah/svg?seed=FilmFanatic",
-      "extraImages": [
-        "https://api.dicebear.com/6.x/adventurer/svg?seed=Cinephile",
-        "https://api.dicebear.com/6.x/bottts/svg?seed=DirectorLife"
-      ],
-      "captions": [
-        "Movie nights are the best 🎬",
-        "Cinematography lover 🎥"
-      ],
-      "gender": "Male",
-      "preference": "Female",
-      "bio": "Filmmaker and aspiring director 📽️.",
-      "nickName": "FilmFanatic"
-    },
-    {
-      "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=ChefLife",
-      "extraImages": [
-        "https://api.dicebear.com/6.x/micah/svg?seed=Foodie",
-        "https://api.dicebear.com/6.x/bottts/svg?seed=RecipeKing"
-      ],
-      "captions": [
-        "Creating culinary masterpieces 🍳",
-        "Food is love ❤️"
-      ],
-      "gender": "Male",
-      "preference": "All",
-      "bio": "Professional chef and food critic 👨‍🍳.",
-      "nickName": "ChefLife"
-    },
-    {
-      "mainImage": "https://api.dicebear.com/6.x/adventurer/svg?seed=NatureLover",
-      "extraImages": [
-        "https://api.dicebear.com/6.x/micah/svg?seed=Hiker",
-        "https://api.dicebear.com/6.x/bottts/svg?seed=EcoWarrior"
-      ],
-      "captions": [
-        "Preserving the planet 🌍",
-        "One hike at a time 🥾"
-      ],
-      "gender": "Female",
-      "preference": "Female",
-      "bio": "Environmental scientist and outdoor enthusiast 🌱.",
-      "nickName": "NatureLover"
-    },
-    {
-      "mainImage": "https://api.dicebear.com/6.x/micah/svg?seed=GameDev",
-      "extraImages": [
-        "https://api.dicebear.com/6.x/adventurer/svg?seed=PixelArt",
-        "https://api.dicebear.com/6.x/bottts/svg?seed=CodePixel"
-      ],
-      "captions": [
-        "Bringing stories to life 🎮",
-        "One pixel at a time 🎨"
-      ],
-      "gender": "Male",
-      "preference": "Female",
-      "bio": "Game developer and indie creator 🎲.",
-      "nickName": "GameDev"
+      "bio": "Fitness enthusiast. Yoga lover. Outdoor explorer 🏋️‍♀️.",
+      "nickName": "FitnessFiend"
     }
   ]
+}
