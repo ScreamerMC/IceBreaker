@@ -229,6 +229,7 @@ export default function EditProfile({ navigation }) {
               buttonStyle={styles.saveButton}
               titleStyle={styles.saveButtonTitle}
               onPress={handleSaveChanges}
+              containerStyle={styles.saveButtonContainer}
             />
           </View>
         </ScrollView>
@@ -380,4 +381,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#FFFFFF',
   },
+  saveButtonContainer: { width: '100%', alignItems: 'center', justifyContent: 'center' },
 });

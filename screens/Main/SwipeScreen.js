@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Dimensions, Image, Animated, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Image, Animated, TouchableOpacity, ScrollView, Platform } from 'react-native';
 import { db, auth } from '../../firebaseConfig';
 import { collection, query, where, getDocs, getDoc, doc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -21,7 +21,7 @@ export default function SwipeScreen({ navigation }) {
       const userRef = doc(db, 'users', userId);
       const userDoc = await getDoc(userRef);
       const { gender: userGender, preference: userPreference } = userDoc.data();
-
+      // get user's interactions 
       // Query to fetch profiles matching user's preference and gender.
       const profilesQuery = query(
         collection(db, 'users'),
@@ -49,7 +49,7 @@ export default function SwipeScreen({ navigation }) {
 
   // Calculates the movement of the user's touch and updates the card position.
   const handleTouchMove = (event) => {
-    const { pageX, pageY } = event.nativeEvent; // Captures the current touch coordinates.
+    const { pageX } = event.nativeEvent; // Captures the current touch coordinates.
     const dx = pageX - touchStartRef.current.x; // Horizontal distance moved.
 
 
@@ -314,10 +314,17 @@ const styles = StyleSheet.create({
     position: 'absolute',
     borderRadius: 20,
     backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    elevation: 5,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 0,
+      },
+    }),
     overflow: 'hidden',
   },
   scrollView: {

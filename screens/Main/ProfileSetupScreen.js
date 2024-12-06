@@ -325,8 +325,8 @@ const styles = StyleSheet.create({
     height: 100,
     marginBottom: 20,
   },
-  saveButton: { backgroundColor: '#FFFFFF', paddingVertical: 15, borderRadius: 10, width: '100%' },
+  saveButton: { backgroundColor: '#FFFFFF', paddingVertical: 15, borderRadius: 10, width: '100%', alignItems: 'center', justifyContent: 'center' },
   saveButtonDisabled: { backgroundColor: '#ccc' },
-  saveButtonTitle: { fontSize: 18, fontWeight: 'bold', color: '#1E90FF', textAlign: 'center' },
+  saveButtonTitle: { fontSize: 18, fontWeight: 'bold', color: '#1E90FF', textAlign: 'center', width: '100%' },
   saveButtonContainer: { width: '100%', alignItems: 'center', justifyContent: 'center' },
 });
