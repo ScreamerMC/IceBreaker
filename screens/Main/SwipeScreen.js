@@ -13,71 +13,113 @@ export default function SwipeScreen({ navigation }) {
   const touchStartRef = useRef({ x: 0, y: 0 }); // Tracks the initial touch position to calculate swipe movement.
   const [swipeFeedback, setSwipeFeedback] = useState({text: '', color: 'transparent'});
   const feedbackColor = useRef(new Animated.Value(0)).current;
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
 
-  // Fetches profiles based on the user's preferences.
+  // useEffect to handle screen focus
   useEffect(() => {
-    const fetchProfiles = async () => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      checkAvailableProfiles(false);
+    });
+    return unsubscribe;
+  }, [navigation]);
+  
+  // Separate the profile checking logic
+  const checkAvailableProfiles = async (includeDisliked = false) => {
+    try {
       const userId = auth.currentUser.uid;
       const userRef = doc(db, 'users', userId);
       const userDoc = await getDoc(userRef);
-      const { gender: userGender, preference: userPreference } = userDoc.data();
-      // get user's interactions 
-      // Query to fetch profiles matching user's preference and gender.
+      const userData = userDoc.data();
+      
+      // Get user's interactions
+      const likes = userData.likes || [];
+      const dislikes = userData.dislikes || [];
+      const matches = userData.matches || [];
+      
+      // If includeDisliked is false, filter out all interactions
+      // If true, only filter out likes and matches
+      const filteredProfiles = includeDisliked ? 
+        [...likes, ...matches] : 
+        [...likes, ...dislikes, ...matches];
+
+      // Query profiles matching user's preference
       const profilesQuery = query(
         collection(db, 'users'),
-        where('gender', '==', userPreference),
-        where('preference', '==', userGender)
+        where('gender', '==', userData.preference),
+        where('preference', '==', userData.gender)
       );
 
-      // Filters out the current user's profile and formats the data.
       const profileDocs = await getDocs(profilesQuery);
-      const profileData = profileDocs.docs
-        .filter((doc) => doc.id !== userId)
-        .map((doc) => ({ id: doc.id, ...doc.data() }));
+      const availableProfiles = profileDocs.docs
+        .filter(doc => 
+          doc.id !== userId && 
+          !filteredProfiles.includes(doc.id)
+        )
+        .map(doc => ({ id: doc.id, ...doc.data() }));
 
-      setProfiles(profileData); // Sets the profiles state.
-    };
+      if (availableProfiles.length === 0) {
+        setProfiles([]);
+        setCurrentIndex(0);
+      } else {
+        setProfiles(availableProfiles);
+        setCurrentIndex(0);
+      }
+    } catch (error) {
+      console.error('Error checking available profiles:', error);
+    }
+  };
 
-    fetchProfiles();
-  }, []);
+  // Update the refresh button to explicitly fetch new profiles
+  const handleRefresh = async () => {
+    await checkAvailableProfiles(true);
+  };
 
   // Records the starting point of the user's touch.
   const handleTouchStart = (event) => {
-    const { pageX, pageY } = event.nativeEvent; // Captures the initial touch coordinates.
-    touchStartRef.current = { x: pageX, y: pageY }; // Saves the coordinates for later calculations.
+    const { pageX } = event.nativeEvent;
+    setStartX(pageX);
+    setIsDragging(false);
+    touchStartRef.current = { x: pageX };
   };
 
   // Calculates the movement of the user's touch and updates the card position.
   const handleTouchMove = (event) => {
-    const { pageX } = event.nativeEvent; // Captures the current touch coordinates.
-    const dx = pageX - touchStartRef.current.x; // Horizontal distance moved.
+    const { pageX } = event.nativeEvent;
+    const dx = pageX - startX;
 
+    // Only trigger dragging if horizontal movement is significant
+    if (Math.abs(dx) > 10 && !isDragging) {
+      setIsDragging(true);
+    }
 
-  requestAnimationFrame(() => {
-    position.setValue({ x: dx, y: 0 });
-  });
+    if (isDragging) {
+      requestAnimationFrame(() => {
+        position.setValue({ x: dx, y: 0 });
+      });
 
-    if (dx > 50) {
-      setSwipeFeedback({text: 'LIKE', color: '#00FF00'});
-      Animated.timing(feedbackColor, {
-        toValue: 1,
-        duration: 0,
-        useNativeDriver: false,
-      }).start();
-    } else if (dx < -50) {
-      setSwipeFeedback({text: 'NOPE', color: '#FF0000'});
-      Animated.timing(feedbackColor, {
-        toValue: 2,
-        duration: 0,
-        useNativeDriver: false,
-      }).start();
-    } else {
-      setSwipeFeedback({text: '', color: 'transparent'});
-      Animated.timing(feedbackColor, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
+      if (dx > 50) {
+        setSwipeFeedback({text: 'LIKE', color: '#00FF00'});
+        Animated.timing(feedbackColor, {
+          toValue: 1,
+          duration: 0,
+          useNativeDriver: false,
+        }).start();
+      } else if (dx < -50) {
+        setSwipeFeedback({text: 'NOPE', color: '#FF0000'});
+        Animated.timing(feedbackColor, {
+          toValue: 2,
+          duration: 0,
+          useNativeDriver: false,
+        }).start();
+      } else {
+        setSwipeFeedback({text: '', color: 'transparent'});
+        Animated.timing(feedbackColor, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: false,
+        }).start();
+      }
     }
   };
 
@@ -162,10 +204,10 @@ export default function SwipeScreen({ navigation }) {
   const handleNextCard = () => {
     position.setValue({ x: 0, y: 0 }); // Resets the card's position for the next profile.
     setCurrentIndex(prevIndex => {
-      if (prevIndex < profiles.length - 1) {
-        return prevIndex + 1;
+      if (prevIndex >= profiles.length - 1) {
+        return profiles.length;
       }
-      return prevIndex ;
+      return prevIndex + 1;
     }); // Updates the current profile index.
   };
 
@@ -218,6 +260,9 @@ export default function SwipeScreen({ navigation }) {
               style={styles.scrollView}
               showsVerticalScrollIndicator={false}
               bounces={false}
+              scrollEnabled={!isDragging}
+              onScrollBeginDrag={() => setIsDragging(false)}
+              onScrollEndDrag={() => setIsDragging(false)}
             >
               {/* Main Image Section */}
               <View style={styles.mainImageContainer}>
@@ -261,11 +306,7 @@ export default function SwipeScreen({ navigation }) {
           <Text style={styles.noProfilesText}>No more profiles to show!</Text> 
           <TouchableOpacity
            style={styles.refreshButton} 
-           onPress={() => {
-            setCurrentIndex(0);
-            handleNextCard();
-            
-          }}
+           onPress={handleRefresh}
           >
           <Ionicons name="refresh" size={24} color="white" />
           <Text style={styles.refreshButtonText}>Refresh</Text>
@@ -293,6 +334,110 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  card: {
+    width: width * 0.8,
+    height: height * 0.7,
+    position: 'absolute',
+    paddingBottom: 10, 
+    marginBottom: 10,
+    borderRadius: 25,
+    backgroundColor: '#f8f9fa',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 0,
+      },
+    }),
+    overflow: 'hidden',
+  },
+  scrollView: {
+    flex: 1,
+    backgroundColor: '#f8f9fa',
+  },
+  mainImageContainer: {
+    position: 'relative',
+    height: height * 0.6,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    overflow: 'hidden',
+  },
+  mainImage: {
+    width: '100%',
+    height: '100%',
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+  },
+  gradientOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 25,
+    paddingVertical: 35,
+    background: 'linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.8))',
+  },
+  name: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginBottom: 10,
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 5,
+  },
+  bio: {
+    fontSize: 16,
+    color: '#FFFFFF',
+    lineHeight: 22,
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 5,
+  },
+  extraImageContainer: {
+    marginVertical: 12,
+    marginHorizontal: 15,
+    borderRadius: 20,
+    backgroundColor: '#FFFFFF',
+    overflow: 'hidden',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 0,
+      },
+    }),
+  },
+  extraImage: {
+    width: '100%',
+    height: 350,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  captionContainer: {
+    padding: 20,
+    backgroundColor: '#FFFFFF',
+  },
+  caption: {
+    fontSize: 15,
+    color: '#2c3e50',
+    textAlign: 'center',
+    lineHeight: 22,
+  },
   feedbackText: {
     position: 'absolute',
     top: '40%',
@@ -306,67 +451,44 @@ const styles = StyleSheet.create({
     textShadowRadius: 10,
     transform: [{ rotate: '-30deg' }],
     elevation: 5,
-
   },
-  card: {
-    width: width * 0.9,
-    height: height * 0.7,
-    position: 'absolute',
-    borderRadius: 20,
-    backgroundColor: '#fff',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 10,
-      },
-      android: {
-        elevation: 0,
-      },
-    }),
-    overflow: 'hidden',
-  },
-  scrollView: {
+  noProfilesContainer: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 30,
   },
-  mainImageContainer: {
-    position: 'relative',
-    height: height * 0.6,
+  noProfilesIcon: {
+    width: 120,
+    height: 120,
+    marginBottom: 25,
+    opacity: 0.9,
   },
-  mainImage: {
-    width: '100%',
-    height: '100%',
-  },
-  gradientOverlay: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingHorizontal: 20,
-    paddingVertical: 30,
-  },
-  name: {
-    fontSize: 28,
-    fontWeight: 'bold',
+  noProfilesText: {
+    fontSize: 26,
     color: '#FFFFFF',
-    marginBottom: 8,
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 20,
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 3,
   },
-  bio: {
-    fontSize: 16,
-    color: '#777',
-    textAlign: 'center',
-    marginVertical: 10,
+  refreshButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingHorizontal: 25,
+    paddingVertical: 15,
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
   },
-  noProfilesText: {
-    fontSize: 24,
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 10,
+  refreshButtonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '600',
+    marginLeft: 10,
   },
   bottomNav: {
     position: 'absolute',
@@ -389,27 +511,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginLeft: 5,
-  },
-  refreshButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#005bb5',
-    padding: 10,
-    borderRadius: 20,
-  },
-  refreshButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginLeft: 8,
-  },
-  noProfilesContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  noProfilesIcon: {
-    width: 150,
-    height: 150,
   },
 });
