@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { Ionicons } from '@expo/vector-icons';
+import { Text, TouchableOpacity } from 'react-native';
 
 // Screens
 import LoginScreen from '../screens/Auth/LoginScreen';
@@ -46,8 +48,20 @@ export default function AppNavigator() {
       <Stack.Screen
         name="VoiceChat"
         component={VoiceChat}
-        options={({ route }) => ({
-          title: `Chat with ${route.params.matchName}`,
+        options={({ route, navigation }) => ({
+          headerTitle: () => (
+            <Text style={{ fontSize: 22, fontWeight: '600', color: '#F5F5F5', textAlign: 'center' }}>Chat with {route.params.nickName}</Text>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.replace('ChatScreen')} style={{ marginLeft: 15 }}>
+              <Ionicons name="arrow-back" size={28} color="#F5F5F5" />
+            </TouchableOpacity>
+          ),
+          headerStyle: {
+            backgroundColor: '#1E90FF',
+            shadowColor: 'transparent',
+          },
+          headerTintColor: '#F5F5F5',
         })}
       />
       <Stack.Screen name="MyProfile" component={MyProfileScreen} options={{ headerShown: false }} />

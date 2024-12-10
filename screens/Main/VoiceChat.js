@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Alert } from 'react-native';
 import { Audio } from 'expo-av';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
-export default function VoiceChat({ route }) {
-  const { matchId, matchName } = route.params;
+export default function VoiceChat({ route, navigation }) {
+  const { matchId, nickName } = route.params;
   const [recording, setRecording] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [otherUserNickName, setOtherUserNickName] = useState('User');
 
   // Start audio recording
   const startRecording = async () => {
@@ -63,12 +65,7 @@ export default function VoiceChat({ route }) {
 
   // Render each audio message
   const renderMessage = ({ item }) => (
-    <View
-      style={[
-        styles.messageContainer,
-        item.sender === 'me' ? styles.myMessage : styles.theirMessage,
-      ]}
-    >
+    <View style = {styles.messageContainer}>
       <TouchableOpacity onPress={() => playMessage(item.uri)}>
         <Ionicons name="play-circle-outline" size={32} color="#FFFFFF" />
       </TouchableOpacity>
@@ -77,7 +74,7 @@ export default function VoiceChat({ route }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Chat with {matchName}</Text>
+      
 
       {/* List of audio messages */}
       <FlatList
