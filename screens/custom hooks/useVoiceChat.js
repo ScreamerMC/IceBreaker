@@ -143,11 +143,12 @@ export function useVoiceChat(matchId) {
       if (sound) {
         await sound.stopAsync();
         await sound.unloadAsync();
+        setSound(null);
       }
       console.log('starting message:', audioUrl);
       const { sound: newSound } = await Audio.Sound.createAsync(
         { uri: audioUrl },
-        { shouldPlay: true, volume: 0.99}
+        { shouldPlay: true, volume: 1.0}
       );
       setSound(newSound);
 

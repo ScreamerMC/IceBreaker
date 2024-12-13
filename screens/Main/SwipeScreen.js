@@ -5,6 +5,7 @@ import { collection, query, where, getDocs, getDoc, doc, setDoc, updateDoc, arra
 import { LinearGradient } from 'expo-linear-gradient';
 import Ionicons from '@expo/vector-icons/Ionicons';
 const { width, height } = Dimensions.get('window');
+import MatchAlert from '../components/MatchAlert';
 
 export default function SwipeScreen({ navigation }) {
   const [profiles, setProfiles] = useState([]); // Stores the profiles fetched from the database.
@@ -16,6 +17,7 @@ export default function SwipeScreen({ navigation }) {
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
 
+  const [matchAlert, setMatchAlert] = useState({visible: false, profile: null});
   // useEffect to handle screen focus
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -164,7 +166,7 @@ export default function SwipeScreen({ navigation }) {
             await updateDoc(otherUserRef, {
               matches: arrayUnion(currentUserId)
             });
-            alert('Match!');
+            setMatchAlert({visible: true, profile: currentProfile});
           }
         setSwipeFeedback({ text: 'LIKE', color: '#00FF00' });
         handleNextCard(); // Moves to the next card.
@@ -321,9 +323,18 @@ export default function SwipeScreen({ navigation }) {
         <TouchableOpacity onPress={() => navigation.navigate('ChatScreen')} style={styles.navButton}>
           <Ionicons name="chatbubbles-outline" size={24} color="#FFFFFF" />
           <Text style={styles.navButtonText}>Chats</Text>
+
         </TouchableOpacity>
+        <TouchableOpacity style={styles.test} onPress={() => setMatchAlert({visible: true, profile: {nickName: 'test'}})}>
+
+      </TouchableOpacity>
       </View>
-      
+      <MatchAlert 
+        visible={matchAlert.visible} 
+        onClose={() => setMatchAlert({visible: false, profile: null})}
+        matchedProfile={matchAlert.profile}
+        navigation={navigation}
+      />
     </LinearGradient>
   );
 }
@@ -334,6 +345,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  /*test: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    padding: 10,
+    borderRadius: 8,
+  },*/
   card: {
     width: width * 0.8,
     height: height * 0.7,
