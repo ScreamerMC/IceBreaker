@@ -324,10 +324,10 @@ export default function SwipeScreen({ navigation }) {
           <Ionicons name="chatbubbles-outline" size={24} color="#FFFFFF" />
           <Text style={styles.navButtonText}>Chats</Text>
 
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.test} onPress={() => setMatchAlert({visible: true, profile: {nickName: 'test'}})}>
+         </TouchableOpacity>
+        {/*<TouchableOpacity style={styles.test} onPress={() => setMatchAlert({visible: true, profile: {nickName: 'test'}})}>
 
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       </View>
       <MatchAlert 
         visible={matchAlert.visible} 
